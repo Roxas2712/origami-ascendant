@@ -7,3 +7,5 @@ Import Origami-Ascendant-1.0.0.zip through the gen1recomp mod manager, enable it
 O / F3: settings. V: camera angle. C: cycle field zoom. Mouse wheel or + / -: zoom step. Controller: L + D-pad up / down. Smartphone: pinch / spread two fingers on free world space. Z remains native confirm. F6 / 5: supported battle view.
 
 See README.md for installation, controls, validation and known issues.
+
+LICENSE: Copyright (c) 2026 Roxas2712. All rights reserved. Personal use only; redistribution and reuse require written permission. See LICENSE for scope and exceptions.

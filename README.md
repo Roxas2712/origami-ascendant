@@ -55,4 +55,8 @@ Use **O → Support → Errors / Send logs** to submit a diagnostic report, or o
 
 `manifest.json` is the mod descriptor; `gen3/entry.lua` loads the runtime. Source and runtime assets are included here. `SOURCE-SHA256.json` records the packaged files. Internal QA identities, player data, private logs and development history are excluded.
 
-Existing license and attribution files are preserved. See [LICENSE](LICENSE) and bundled third-party notices. Pokémon and related names belong to their respective owners; this is an unofficial fan project.
+**Copyright © 2026 Roxas2712. All rights reserved.** Original Origami Ascendant code and original assets are proprietary. Personal, non-commercial use of the official mod is permitted; redistribution, reuploads, modified releases and reuse in other projects require prior written permission. See [LICENSE](LICENSE).
+
+Separately licensed third-party components retain their own notices and permissions. Pokémon and related names belong to their respective owners; this is an unofficial fan project.
+
+**License correction (12 October 2026):** The initial upload included an MIT notice. The current original-work license is proprietary and applies prospectively; this change does not revoke permissions previously granted for an earlier copy. GitHub's platform rights for public repositories still apply.

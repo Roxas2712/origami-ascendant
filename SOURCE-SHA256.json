@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "basis": "Frozen RC133 runtime; release metadata and documentation only",
+  "basis": "Frozen RC133 runtime; public release with proprietary license correction on 2026-10-12",
   "files": {
     ".gitignore": "d87aff1507d136b71d3ca5651b07c5e57083b01fc885ea45045e6500c93d6ea5",
-    "CHANGELOG.md": "db81b7f112398434815128866971ae10c50a5964cde71f66ee95779de4c875e1",
+    "CHANGELOG.md": "e4fea820550ae168767ea46cb288d24884b91977e52298792e5b654408e22c45",
     "ENGINE-INSTALLATION.txt": "50485fc0e9d28a1c1de5e856244f267d5e6bc52119efda036ff6198359857194",
-    "LICENSE": "e029d2906be97c9ca9da24f6bb8516f2d7ec8b9b88892ad8b4b7ed24a2a221db",
-    "LIESMICH.txt": "85aa42c2fd0eb8a04b3033bd7c033a8c549893585bdfe1aa7c045daf3dd3d79b",
-    "README.md": "48819db7a43d52743c3342417bc3d4e0bfc685d1247148af123a3024a8ac5614",
+    "LICENSE": "260f367c2fce29a5ae19e9d456814db55ea3c2fb425e1bf7e9f623562fe68518",
+    "LIESMICH.txt": "59adaad0b9629d338953fa6ef2019c373f23f96c9d447d3a66a760394eff903e",
+    "README.md": "5a8ea322da7841daa5d8ee0b88fde251aa3a52cfa983690eced5578a1c8c8c7a",
     "engine-support/ENGINE-LICENSE.MD": "d68d38ba4b07c34122d669f219e5c52db45d46f9825378b19bea3f50b1e4cc19",
     "engine-support/engine-compatibility.json": "0634d22ff7b28772b433c62fd321e2efebaa53352a79c02aba458785dc88c821",
     "engine-support/firered-rc1-engine.patch": "588886d197e71a6b9eca914a0771e67481736b885a0e28b60b4f891e0ff7b085",
