@@ -1,0 +1,63 @@
+--- a/src/core/game3/dataset.lua
++++ b/src/core/game3/dataset.lua
+@@ -140,6 +140,7 @@
+     local floorNum = spec.floorNum
+     local weather = spec.weather
+     local mapType = spec.mapType
++    local layoutId = spec.layoutId
+     -- pokefirered/include/global.fieldmap.h:191
+     local cave = spec.cave
+     local allowEscaping = spec.allowEscaping
+@@ -153,7 +154,7 @@
+     if regionMapSectionId == nil or showMapName == nil or cave == nil
+         or allowEscaping == nil or allowRunning == nil or bikingAllowed == nil
+         or battleType == nil or music == nil
+-        or borderWidth == nil or borderHeight == nil then
++        or borderWidth == nil or borderHeight == nil or layoutId == nil then
+       -- Try loading from data/generated/gba/map_tree/maps/{slot}/header.json
+       local cache = loveCache()
+       local candidates = {}
+@@ -185,6 +186,7 @@
+             floorNum = floorNum or h.floorNum
+             weather = weather or h.weather
+             mapType = mapType or h.mapType
++            layoutId = layoutId or h.layoutId
+             cave = cave or h.cave
+             allowEscaping = allowEscaping or h.allowEscaping
+             allowRunning = allowRunning or h.allowRunning
+@@ -233,6 +235,8 @@
+       floorNum = tonumber(floorNum) or 0,
+       weather = weather or 0,
+       mapType = mapType or 0,
++      layoutId = tonumber(layoutId),
++      nativeLayoutFile = info and info.file,
+       cave = tonumber(cave),
+       allowEscaping = tonumber(allowEscaping),
+       allowRunning = tonumber(allowRunning),
+--- a/src/core/game3/scripting/ops_a.lua
++++ b/src/core/game3/scripting/ops_a.lua
+@@ -251,6 +251,24 @@
+   local root = Extract.NATIVE_ROOT
+     or ((Extract.CACHE_ROOT or "data/generated/gba") .. "/native")
+   local blob = Dataset.cache():read(root .. "/layouts/alt_" .. layoutId .. ".mid")
++  -- Layouts shared by an existing map (e.g. Shoal high/low tide) are
++  -- already baked under that map's name. Older caches omit alt_<id>.mid.
++  -- Use the imported header ID and untouched cached cells, never another
++  -- live map's overrides. No ROM-cache mutation or synthetic tiles.
++  if not blob then
++    local candidates = {}
++    for id, candidate in pairs(game.data.maps or {}) do
++      if candidate.layoutId == layoutId and candidate.pair == def.pair
++          and type(candidate.nativeLayoutFile) == "string" then
++        candidates[#candidates + 1] = id
++      end
++    end
++    table.sort(candidates)
++    for _, id in ipairs(candidates) do
++      blob = Dataset.cache():read(root .. "/" .. game.data.maps[id].nativeLayoutFile)
++      if blob then break end
++    end
++  end
+   if not blob then
+     if log then log("[game3] setmaplayoutindex " .. layoutId .. ": no baked layout") end
+     return false

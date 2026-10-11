@@ -1,0 +1,34 @@
+--- a/src/mods/Loader.lua
++++ b/src/mods/Loader.lua
+@@ -1698,6 +1698,31 @@
+   }, { __index = api.content })
+   -- the mod's own directory and nothing above it: PhysFS already refuses a
+   -- climb, but loader.fs is injectable and has no such floor
++  -- Read-only identity for prebuilt render artifacts. Only hashes of named
++  -- engine Lua sources are exposed; no host paths or file contents escape.
++  function api:engineFingerprint(paths)
++    if type(paths) ~= "table" or #paths < 1 or #paths > 4096 then return nil end
++    local ok, result = pcall(function()
++      local previous = ""
++      for _, path in ipairs(paths) do
++        assert(type(path) == "string" and path:match("^src/[%w_/-]+%.lua$")
++          and not path:find("..", 1, true) and path > previous, "engine source path")
++        previous = path
++      end
++      local key = table.concat(paths, "\0")
++      loader.renderFingerprints = loader.renderFingerprints or {}
++      if loader.renderFingerprints[key] then return loader.renderFingerprints[key] end
++      local rows = {}
++      for _, path in ipairs(paths) do
++        local raw = assert(loader.fs.read(path), "engine source unreadable")
++        rows[#rows + 1] = path .. "\0" .. love.data.hash("sha256", raw)
++      end
++      local digest = love.data.encode("string", "hex", love.data.hash("sha256", table.concat(rows)))
++      loader.renderFingerprints[key] = digest
++      return digest
++    end)
++    return ok and result or nil
++  end
+   function api:read(relative)
+     return loader.fs.read(SafePath.join(self.path, relative, "mod:read"))
+   end

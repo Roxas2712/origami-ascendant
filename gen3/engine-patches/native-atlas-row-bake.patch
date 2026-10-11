@@ -1,0 +1,43 @@
+--- a/src/import/gba/native_pack.lua
++++ b/src/import/gba/native_pack.lua
+@@ -225,25 +225,24 @@
+       lut[byte] = string.char(rgb[1] or 0, rgb[2] or 0, rgb[3] or 0, 255)
+     end
+   end
+-  -- Fill atlas by mid slot: slot i occupies atlas cell (i%cols, floor(i/cols)).
++  -- Convert contiguous native tile rows, avoiding per-pixel division/modulo.
+   local pixels = idxTbl.pixels or {}
+   local rowChunks = {}
+-  for ay = 0, h - 1 do
+-    local midRow = math.floor(ay / 16)
+-    local py = ay % 16
+-    local line = {}
+-    for ax = 0, w - 1 do
+-      local midCol = math.floor(ax / 16)
+-      local px = ax % 16
+-      local slot = midRow * cols + midCol -- 0-based atlas slot
+-      local byte = 0
+-      if slot < midCount then
+-        local base = slot * 256
+-        byte = pixels[base + py * 16 + px + 1] or 0
++  local empty = string.rep(lut[0],16)
++  for midRow = 0, rows - 1 do
++    for py = 0, 15 do
++      local line = {}
++      for midCol = 0, cols - 1 do
++        local slot = midRow * cols + midCol
++        if slot < midCount then
++          local base = slot * 256 + py * 16
++          line[midCol + 1] = (lut[pixels[base + 1] or 0] or lut[0]) .. (lut[pixels[base + 2] or 0] or lut[0]) .. (lut[pixels[base + 3] or 0] or lut[0]) .. (lut[pixels[base + 4] or 0] or lut[0]) .. (lut[pixels[base + 5] or 0] or lut[0]) .. (lut[pixels[base + 6] or 0] or lut[0]) .. (lut[pixels[base + 7] or 0] or lut[0]) .. (lut[pixels[base + 8] or 0] or lut[0]) .. (lut[pixels[base + 9] or 0] or lut[0]) .. (lut[pixels[base + 10] or 0] or lut[0]) .. (lut[pixels[base + 11] or 0] or lut[0]) .. (lut[pixels[base + 12] or 0] or lut[0]) .. (lut[pixels[base + 13] or 0] or lut[0]) .. (lut[pixels[base + 14] or 0] or lut[0]) .. (lut[pixels[base + 15] or 0] or lut[0]) .. (lut[pixels[base + 16] or 0] or lut[0])
++        else
++          line[midCol + 1] = empty
++        end
+       end
+-      line[ax + 1] = lut[byte] or lut[0]
+-    end
+-    rowChunks[ay + 1] = table.concat(line)
++      rowChunks[#rowChunks + 1] = table.concat(line)
++    end
+   end
+   return table.concat(rowChunks), w, h
+ end

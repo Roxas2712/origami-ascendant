@@ -1,0 +1,62 @@
+{
+  "tool": "built-in image_gen",
+  "source": "<asset-generation>/generated_images/01a0f305-8a5e-71c3-b21a-b96d47ff8f59/exec-83b0fc83-4ecb-4433-848a-2805aca6f1ed.png",
+  "file": "kanto-misty-popup-v4.png",
+  "prompt": "Production game texture atlas, exquisite handmade PAPER CUTOUT POP-UP DIORAMA components for Pok\u00e9mon FireRed Cerulean Gym, Misty's playful turquoise swimming-pool world. TRANSPARENT BACKGROUND. Nine individually isolated objects, strict spacious 3 by 3 equal-cell grid, no lettering, no labels, no outer ball, no people, no Pokemon. Front three-quarter slightly elevated consistent camera, very subtle perspective, flat paper scenic flats with clearly visible thin cream cardstock edges, layered matte watercolor cut paper, intricate small separate paper details and shadows between paper layers. NOT glossy miniature plastic, not low-poly rock chunks, not vector icons, not simple generic clipart. Bright turquoise, azure, warm cream, sandy gold, coral red, touches of fern green. Rich crafted compositions with overlapping silhouettes, extremely beautiful tactile papercraft. Each component must be entirely contained within its own cell with at least 30px transparent padding, no detached parts leaking to another cell. Wide 1536x1024 atlas.\nRow1 left: elaborate tall asymmetrical blue-and-white tiled pool rockery / diving platform wing made of stacked flat paper terraces, cream pool steps, red lifebuoy, narrow steel-paper ladder, paper fern fronds and a high small blue diving board, lush intricate but airy open silhouette, no enclosing wall.\nRow1 middle: layered curved ornamental pool spillway, three overlapping azure cardstock wave curtains cascading from three cream-tiled ledges at different heights, thin white paper foam fringe and curled splash at bottom, tall waterfall cascade with visibly stacked paper layers, no snow or ice.\nRow1 right: second complementary pool wing, cream tiered seating / tiled pool terraces stepping upward, slender blue posts, folded paper palm fronds, coiled lifebuoy rope, rich turquoise mosaics, no enclosing wall, asymmetrical.\nRow2 left: elegant low wide curved cream-and-blue tiled pool edge with a small ladder and red-blue lane rope, perspective upper tread visible, fine waterline and collage paper ripples below.\nRow2 middle: big lush freestanding paper fern and broad tropical leaves in a blue-and-white mosaic planter, many separate overlapping cutout leaves, small coral flowers, thin cream edges.\nRow2 right: wide sweeping S-curve paper water wave, multiple overlapping turquoise and blue ribbons, curling white foam edge, visually airy thin paper and small transparent gaps, shallow height, no rectangular backing.\nRow3 left: cream tiled curved ornamental railing with red lifebuoy and small coiled rope, delicate overlapping paper strips, no background.\nRow3 middle: small freestanding intricate cardstock pool fountain, three layered curling splash ribbons above a round low cream tiled basin with dark blue rim, layered white droplets attached to the ribbons, no glass or realism.\nRow3 right: ONE delicately layered pale blue water droplet pendant with a small golden suspension eyelet, white paper highlight and cream visible cardstock edge, charming flat paper construction, no string extending out of cell.\n",
+  "parts": [
+    [
+      64,
+      4,
+      493,
+      370
+    ],
+    [
+      561,
+      0,
+      995,
+      377
+    ],
+    [
+      1086,
+      5,
+      1513,
+      383
+    ],
+    [
+      31,
+      432,
+      498,
+      682
+    ],
+    [
+      554,
+      384,
+      989,
+      698
+    ],
+    [
+      1029,
+      448,
+      1526,
+      691
+    ],
+    [
+      68,
+      716,
+      496,
+      1000
+    ],
+    [
+      630,
+      708,
+      932,
+      1018
+    ],
+    [
+      1191,
+      719,
+      1362,
+      1003
+    ]
+  ]
+}

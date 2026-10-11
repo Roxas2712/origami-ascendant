@@ -1,0 +1,96 @@
+--- a/src/core/game3/pokemon.lua
++++ b/src/core/game3/pokemon.lua
+@@ -1439,6 +1439,8 @@
+     end
+   end
+   local image = love.graphics.newImage(imageData)
++  require("src.core.game3.sprite_shape").register(image, rgba, w, h)
++  imageData:release()
+   if image.setFilter then image:setFilter("nearest", "nearest") end
+   return image
+ end
+--- a/src/core/game3/trainer_pic.lua
++++ b/src/core/game3/trainer_pic.lua
+@@ -41,6 +41,8 @@
+   local ok, imageData = pcall(love.image.newImageData, w, h, "rgba8", rgba)
+   if not ok or not imageData then return nil end
+   local image = love.graphics.newImage(imageData)
++  require("src.core.game3.sprite_shape").register(image, rgba, w, h)
++  imageData:release()
+   if image.setFilter then image:setFilter("nearest", "nearest") end
+   return image
+ end
+--- a/src/core/game3/mon_anim.lua
++++ b/src/core/game3/mon_anim.lua
+@@ -3459,6 +3459,8 @@
+   end
+   local img = love.image.newImageData(64, 64, "rgba8", rgba:sub(size * frame + 1, size * (frame + 1)))
+   local image = love.graphics.newImage(img)
++  require("src.core.game3.sprite_shape").register(image, rgba:sub(size * frame + 1, size * (frame + 1)), 64, 64)
++  img:release()
+   image:setFilter("nearest", "nearest")
+   hit = { image = image, w = 64, h = 64 }
+   sheets[key] = hit
+--- a/src/core/game3/tileset_native.lua
++++ b/src/core/game3/tileset_native.lua
+@@ -110,6 +110,7 @@
+   end
+ 
+   local ts = {
++    renderRevision = 0,
+     pair = pair,
+     image = image,
+     imageData = imageData,
+@@ -303,6 +304,7 @@
+   local colors = NativePack.palsToRgb8({ [0] = src })[0]
+   paint(ts.image, ts.imageData, pix.under, colors)
+   paint(ts.overImage, ts.overImageData, pix.over, colors)
++  ts.renderRevision = (ts.renderRevision or 0) + 1
+   ts.patchedSlots = ts.patchedSlots or {}
+   ts.patchedSlots[slot] = true
+   return true
+--- a/src/core/game3/tileset_anim.lua
++++ b/src/core/game3/tileset_anim.lua
+@@ -229,6 +229,7 @@
+         end
+       end
+       local ts = entry.atlas
++      if dirty.under or dirty.over then ts.renderRevision = (ts.renderRevision or 0) + 1 end
+       if dirty.under and ts.image and ts.image.replacePixels then ts.image:replacePixels(ts.imageData) end
+       if dirty.over and ts.overImage and ts.overImage.replacePixels then ts.overImage:replacePixels(ts.overImageData) end
+     end
+@@ -328,6 +329,7 @@
+   local ts = entry.atlas
+   if not ts or not ts.imageData then return end
+   entry.frames[kind] = frame
++  ts.renderRevision = (ts.renderRevision or 0) + 1
+ 
+   local nMids = #bank.mids
+   local cols = ts.cols or 16
+--- /dev/null
++++ b/src/core/game3/sprite_shape.lua
+@@ -0,0 +1,24 @@
++-- CPU-only silhouette metadata registered while native RGBA is available.
++-- Weak Image keys follow the native sprite caches; no ImageData/GPU readback
++-- or duplicate RGBA is retained. Coordinates match 64x64 battle portraits.
++local S={}
++local shapes=setmetatable({},{__mode='k'})
++function S.register(image,rgba,w,h)
++ if not image or w~=64 or h~=64 then return end
++ local points={};local top,bottom=64,-1
++ for y=0,63 do
++  local left,right=64,-1
++  for x=0,63 do
++   local a=rgba:byte((y*64+x)*4+4)
++   if a>=3 then left=math.min(left,x);right=x end
++   if a>=128 then top=math.min(top,y);bottom=y end
++  end
++  if right>=left then
++   points[#points+1]={left-32,y-32};points[#points+1]={right+1-32,y-32}
++   points[#points+1]={left-32,y+1-32};points[#points+1]={right+1-32,y+1-32}
++  end
++ end
++ shapes[image]={outline=points,metrics=bottom>=top and {bottom=bottom+1,height=bottom-top+1}or {bottom=56,height=48}}
++end
++function S.get(image)return shapes[image]end
++return S

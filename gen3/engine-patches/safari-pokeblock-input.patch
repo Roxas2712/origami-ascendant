@@ -1,0 +1,17 @@
+diff --git a/src/ui/game3/hud.lua b/src/ui/game3/hud.lua
+index 63e27e6..4208446 100644
+--- a/src/ui/game3/hud.lua
++++ b/src/ui/game3/hud.lua
+@@ -252,7 +252,11 @@ function Hud.update(game, _dt, inputTop)
+     local top = Stack.top()
+     local evoTop = top and top.id == "evolution_scene" and (inputTop == nil or top == inputTop)
+     local pyramidBagTop = top and top.id == "rse_pyramid_bag"
+-    if (not inBattle) or evoTop or pyramidBagTop or (top and top.id == "naming") then
++    -- Emerald's Safari selection is a native modal, like the Pyramid bag.
++    -- Only its owning phase may forward input; do not replay the opening A.
++    local safariCaseTop = top and top.id == "rse_pokeblock_case"
++      and Battle._phase == "safari_pokeblock" and (inputTop == nil or top == inputTop)
++    if (not inBattle) or evoTop or pyramidBagTop or safariCaseTop or (top and top.id == "naming") then
+       if update_top_menu(input) then
+         return
+       end

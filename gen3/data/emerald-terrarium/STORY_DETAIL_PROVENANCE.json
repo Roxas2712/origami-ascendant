@@ -1,0 +1,15 @@
+{
+  "tool": "OpenAI built-in image_gen",
+  "date": "2026-10-01",
+  "prompts": {
+    "story-small-props": "Use case: stylized-concept. Production asset atlas for flat layered paper game scenery. 1536x1024 RGBA TRUE transparent background. Six isolated full small foreground props, 3 columns x 2 rows, 32px wide transparent gutters. All six props fully in frame, NO rectangular backdrop or ground plane. Rich hand-cut layered matte paper fibres, visible fine cut edges, overlapping flat colour sheets, popup-book stage style. TOP LEFT: three overlapping coiled dark navy cables with tiny silver connectors, some folded cream technical papers beside them, no writing. TOP CENTRE: three lush small tropical fern pots with individual layered leaves and an orange flower. TOP RIGHT: two worn olive-green electrical crates beside a small moss patch and loose orange copper wire loops. BOTTOM LEFT: a low white-and-blue small mission instrument case with a tiny cyan indicator and separate rolled blueprints beside it, no letters. BOTTOM CENTRE: a low cluster of rolled weather maps and small glass rainfall measuring tubes in a timber holder, with a few tiny fern leaves. BOTTOM RIGHT: three small stacked grey broken concrete slabs with moss, two copper coils and a yellow cable connector. No ball, no characters, no text, no shiny 3D rendering. Front elevation designed as freestanding small theatre props, no large architecture.",
+    "story-coldstone-floor": "Use case: stylized-concept. Square 1254x1254 OPAQUE top-down orthographic flat floor texture, fills entire canvas, no background. Ancient cool grey sea-cave stone floor in a meticulous flat layered construction-paper style. Large irregular desaturated blue-grey paper stone plates with thin dark chipped seams, subtle tiny pale frost grains in the outer cracks and faint cold teal mineral stains near the margins. Broad calm central field for a battle. Thin visible paper cut edges, detailed fibres, soft matte shading. No central symbol, no ice crystals or props, no pedestal, no rim, no perspective. It should read as a dry cool stone cave floor with very restrained frost, not pure ice or industrial tiles.",
+    "story-electric-floor": "Use case: stylized-concept. Square 1254x1254 OPAQUE top-down orthographic flat floor texture filling canvas. Worn old underground generator room floor made from large grey-green concrete plates in flat layered construction paper, many tiny fibre details and subtle chipped seams, restrained old yellow safety strip fragments only near the outer margins, dark grey cracks and minute moss flecks at the outer cracks. Calm broad centre for a Pokémon battle. No central symbol, no props, no platform or rim, no perspective, no dimensional objects. Refined matte papercraft."
+  },
+  "sources": {
+    "story-small-props.png": "exec-c5f025f2-05f6-4bdf-810d-c46d1998665e.png",
+    "story-coldstone-floor.png": "exec-bfea9800-5b35-40d1-b304-bc9cca98e575.png",
+    "story-electric-floor.png": "exec-b758f523-7a85-4f62-bbf9-17f335fe86e4.png"
+  },
+  "notes": "Original unmodified outputs. Replaces sliced cable detail and mismatched floor materials in the story locations."
+}

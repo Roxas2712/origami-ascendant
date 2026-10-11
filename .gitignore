@@ -1,0 +1,8 @@
+.DS_Store
+*.zip
+*.gba
+*.gbc
+*.sav
+*.srm
+*.log
+.env

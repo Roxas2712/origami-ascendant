@@ -1,0 +1,31 @@
+--- a/src/core/game3/pokecenter_heal.lua
++++ b/src/core/game3/pokecenter_heal.lua
+@@ -515,6 +515,28 @@
+   love.graphics.setColor(1, 1, 1, 1)
+ end
+ 
++-- Presentation snapshot for alternate field renderers. Native palette phases,
++-- placement, monitor frames and completion callbacks keep their original owner.
++function PokecenterHeal.spriteSnapshot()
++  local fx = PokecenterHeal._fx
++  local out = {}
++  if not fx or not ensure_gfx() then return out end
++  if fx.state < STATE.DUMMY then
++    local image = ball_image(glow_key(fx))
++    if image then
++      for _, b in ipairs(fx.balls) do
++        out[#out + 1] = { image = image, x = b.x, y = b.y, kind = "ball" }
++      end
++    end
++  end
++  if fx.monitorVisible and PokecenterHeal._monQuads then
++    local q = PokecenterHeal._monQuads[fx.monitorFrame or 0]
++    if q then out[#out + 1] = { image = PokecenterHeal._monImg, quad = q,
++      x = fx.monitorX or 0, y = fx.monitorY or 0, kind = "monitor" } end
++  end
++  return out
++end
++
+ -- Exported for tests: pret OAM top-left after centerToCorner.
+ PokecenterHeal._ballScreenTl = ball_screen_tl
+ PokecenterHeal._monitorScreenTl = monitor_screen_tl

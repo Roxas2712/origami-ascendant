@@ -1,0 +1,80 @@
+{
+  "tool": "built-in image_gen",
+  "source": "<asset-generation>/generated_images/01a0f305-8a5e-71c3-b21a-b96d47ff8f59/exec-540f7a6b-cc0b-4b5e-aa14-202075183e2e.png",
+  "file": "kanto-gym-popup-b-v4.png",
+  "prompt": "Transparent production game atlas, TWELVE elaborate thin layered PAPER CUTOUT scenic props in strict roomy 4 columns x 3 rows grid, 1536x1024. Flat handcrafted pop-up book pieces, clearly visible cream cardstock edges, watercolor matte colored paper, many fine overlapping cut-paper details, charming theatrical fantasy, beautiful deliberate art direction. Front slightly elevated perspective, entirely isolated transparent silhouettes, at least 20px padding between objects, no rectangular backdrops, no complete diorama, no text or labels, no characters or ball, no shiny plastic or low-poly 3D. Every object's silhouette fits one cell.\nROW1: Saffron psychic gym, violet, mauve, midnight blue, pink and pale gold; (1) tall stacked paper zigzag teleport staircase with violet paneled partitions, overlapping gold trim, small freestanding stars and layered circular teleport pad at its foot; (2) complementary hovering folded-paper stair terraces connected by curling pink paper ribbons, little hanging gold star pendants, violet screen panels; (3) low wide stepped purple paper platform with two circular pink-and-gold teleporter pads and fine interlocking paper border strips, no floor rectangle behind it; (4) delicate freestanding mobile of three separate curling violet paper rings and gold stars, attached by thin paper stems to a small violet console base, no huge emblem.\nROW2: Cinnabar science quiz gym in warm brick red, cream, brass, charcoal and blue; (1) tall half-open cream quiz door in a red metal frame with tiny green/red signal lamps, nearby folded paper books and a side electrical pipe, charming retro scientific workshop not volcano; (2) tall stacked brass-and-red laboratory boiler with gauges, coiled paper tubes and a small lamp, visible overlapping cardstock plates and cream cut edges; (3) low detailed wooden scientist's quiz console, books, a white sheet, little switches and a folded microscope silhouette, small lit indicator paper squares; (4) short rich assembly of curling pale tracing-paper steam ribbons rising from layered brass pipes, warm red housings, no flames.\nROW3: Viridian ground gym, terracotta, sage green, warm ochre and cream; (1) tall tiered tan stonework wing with clearly layered sediment sheets, sage painted rectangular wall panels and small pockets of lush fern leaves; (2) complementary stairway cut from stacked cream card with terracotta retaining walls, stone boulders and an archless high sage-green partition at rear; (3) low wide sage-and-terracotta machinery platform with two cream arrow floor tiles and little gold mechanical rails, a ground-gym moving-floor puzzle as paper collage; (4) rich low paper rock-and-fern bed, multiple mossy stones, little carved terracotta fragments and separate grasses, no backing rectangle.\n",
+  "parts": [
+    [
+      38,
+      5,
+      356,
+      358
+    ],
+    [
+      400,
+      7,
+      759,
+      358
+    ],
+    [
+      770,
+      177,
+      1217,
+      355
+    ],
+    [
+      1224,
+      14,
+      1520,
+      358
+    ],
+    [
+      34,
+      361,
+      353,
+      688
+    ],
+    [
+      425,
+      352,
+      722,
+      673
+    ],
+    [
+      793,
+      441,
+      1172,
+      684
+    ],
+    [
+      1238,
+      371,
+      1507,
+      681
+    ],
+    [
+      13,
+      676,
+      355,
+      1012
+    ],
+    [
+      387,
+      681,
+      755,
+      1008
+    ],
+    [
+      779,
+      756,
+      1192,
+      983
+    ],
+    [
+      1212,
+      733,
+      1524,
+      995
+    ]
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "tool": "builtin image_gen",
+  "prompts": {
+    "floor": "Use case: stylized-concept. Square 1254x1254 opaque top-down orthographic full bleed game floor texture for a hand-cut PAPER rainforest. Rich matte paper fibres, flat painted mossy olive and deep forest green ground around a quiet irregular central warm muted beige dirt clearing covering about middle 65% of image. Thin overlapping cut paper grass scallops, tiny green fallen leaves and fine moss grain, not fluffy real moss. No large objects, no rocks, no trees, no plinths, no lettering, no symbols, no pokeball symbol, no horizon or perspective, no cast shadows. Restrained natural olive green and desaturated tan, not neon or lime green, beautifully detailed but quiet flat surface.",
+    "details": "Use case: stylized-concept. Landscape 1536x1024 truly transparent six isolated intricate low paper foreground plant clusters, 3 columns 2 rows with generous gutters and complete silhouettes. Flat hand-cut layered construction paper, visible cream edges, fine paper grain, matte gentle lighting, front elevation. No stage, no backgrounds, no writing, no shadows outside silhouette. Top left: very dense dark olive green tropical ferns, large layered leaves and a few small mossy grey pebbles, rainforest palette. Top middle: broken old mossy stump among long emerald jungle grass and many fine fern fronds, tiny pink flowers. Top right: pale limestone rocks with teal broad leaves and small blue and red flowers, sunlit secret island grove. Bottom left: tuft of yellow-green safari grasses, tiny cream daisies, a small warm grey stone, no log. Bottom middle: low slaty grey alpine boulders with sparse olive grass and white flowers, windswept mountain palette. Bottom right: little pale mossy stones surrounded by subdued dark green grass and white memorial flowers, NO grave marker. Highly detailed overlapping individual paper leaves, no smooth volumetric plants."
+  },
+  "sources": {
+    "floor": "exec-35d22003-af7a-4cde-8444-43e97ceae330.png",
+    "details": "exec-bb2e8935-8551-429c-be3c-dddc56492d81.png"
+  }
+}

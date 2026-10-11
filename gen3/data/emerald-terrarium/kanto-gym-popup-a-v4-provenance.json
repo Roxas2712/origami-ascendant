@@ -1,0 +1,80 @@
+{
+  "tool": "built-in image_gen",
+  "source": "<asset-generation>/generated_images/01a0f305-8a5e-71c3-b21a-b96d47ff8f59/exec-ff3cd99c-1126-4381-ba68-fd50a40ae66a.png",
+  "file": "kanto-gym-popup-a-v4.png",
+  "prompt": "Transparent game atlas of twelve genuinely EXQUISITE layered PAPER CUTOUT diorama components, in a spacious strict 4 columns by 3 rows grid. No lettering or labels or ball. Hand-cut flat cardstock theatre scenery, cream cut edges, matte watercolor textures, many overlapping thin paper planes, little folds and tabs. Highly detailed yet bold readable silhouettes, charming crafted animated pop-up book aesthetic. Not plastic, not voxels, not glossy 3D, not simplistic clipart. Each object isolated with generous transparent padding, full silhouette inside its cell. Front slightly elevated view matching a small stage. 1536x1024.\nROW ONE, four components for a ROCK GEOLOGY GYM, ochre, warm gray, sage moss, cream edges: (1) a tall stepped rock stratum paper wing with layered ledges, loose boulders, fossil impressions, little paper ferns in cracks and an open stepped silhouette (2) a complementary tall slate outcrop and crooked layered stone staircase, carved cream blocks, fern tufts (3) a low broad overlapping paper strata terrace with carved fossil specimens and small moss patches, open uneven silhouette, not a wall (4) a small detailed paper rock garden with three overlapping stones and ferns, no base rectangle.\nROW TWO, four components for a KANTO ELECTRIC GYM with warm yellow, muted olive military green, black hazard stripes and copper: (1) left half of an airy paper industrial gantry with striped column, overlapping exposed cable layers, relay boxes and two little lamps (2) right half of the gantry with a thin overhead beam angled toward the left, capacitor pipes, curled wires and a small switchbox, not an enclosing wall (3) narrow console desk with toggle switches and tiny colored status paper lamps, coiled thick cables and bolted layered green panels (4) three detailed freestanding paper metal rubbish bins with different lid angles, copper cables weaving between them, yellow-black safety tape, each bin recognizable, this is a puzzle prop.\nROW THREE, four components for a serene NINJA GYM in red cedar, indigo cloth, cream shoji, bamboo green: (1) tall open cedar screen frame, intricate paper bamboo leaves around one side, a hanging lantern and a slim shoji panel, open silhouette (2) complementary tiered paper bonsai garden rising over a low red-and-cream checker-tiled stone terrace, tiny bamboo leaves and layered roots (3) open dark cedar overhead beam with two suspended indigo cloth curtains and small paper tassels, no skulls or faces or emblems, light airy silhouette (4) low decorative paper reed garden, bonsai leaves, three pale stepping stones and delicate indigo flower petals, no backing rectangle.\n",
+  "parts": [
+    [
+      11,
+      7,
+      385,
+      340
+    ],
+    [
+      421,
+      7,
+      720,
+      346
+    ],
+    [
+      738,
+      90,
+      1170,
+      344
+    ],
+    [
+      1190,
+      93,
+      1523,
+      344
+    ],
+    [
+      40,
+      349,
+      350,
+      671
+    ],
+    [
+      357,
+      351,
+      716,
+      674
+    ],
+    [
+      743,
+      449,
+      1099,
+      673
+    ],
+    [
+      1127,
+      465,
+      1521,
+      671
+    ],
+    [
+      13,
+      677,
+      358,
+      998
+    ],
+    [
+      358,
+      673,
+      758,
+      1000
+    ],
+    [
+      743,
+      690,
+      1175,
+      917
+    ],
+    [
+      1179,
+      687,
+      1527,
+      999
+    ]
+  ]
+}

@@ -1,0 +1,27 @@
+diff --git a/src/import/gba/map_catalog.lua b/src/import/gba/map_catalog.lua
+index 25e609a5..a73976fb 100644
+--- a/src/import/gba/map_catalog.lua
++++ b/src/import/gba/map_catalog.lua
+@@ -97,7 +97,7 @@ function MapCatalog.isKnown(mapId)
+   return _aliases[mapId] ~= nil
+ end
+ 
+---- Match a tileset struct's tiles pointer to Versions.TILESETS name.
++--- Match the complete source identity; tile sheets alone can be shared.
+ function MapCatalog.tilesetNameForPtr(rom, tilesetPtr)
+   if not tilesetPtr or tilesetPtr == 0 then return nil end
+   local MapTree = require("src.import.gba.map_tree")
+@@ -106,7 +106,12 @@ function MapCatalog.tilesetNameForPtr(rom, tilesetPtr)
+   local tilesOff = rom:ptrOffset(ts.tilesPtr)
+   if not tilesOff then return nil end
+   for name, spec in pairs(Versions.TILESETS or {}) do
+-    if spec.tiles == tilesOff then
++    if spec.tiles == tilesOff
++      and spec.palettes == rom:ptrOffset(ts.palettesPtr)
++      and spec.metatiles == rom:ptrOffset(ts.metatilesPtr)
++      and spec.attributes == rom:ptrOffset(ts.attributesPtr)
++      and spec.compressed == ts.compressed
++      and spec.secondary == ts.secondary then
+       return name, ts
+     end
+   end

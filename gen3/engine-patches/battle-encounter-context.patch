@@ -1,0 +1,52 @@
+--- a/src/core/game3/field.lua
++++ b/src/core/game3/field.lua
+@@ -1512,7 +1512,20 @@
+   end
+   local Runtime = package.loaded["src.core.game3.runtime"]
+   local BattleBridge = require("src.core.game3.battle_bridge")
+-  local ok, err = BattleBridge.startWild(Runtime and Runtime._mod, Field._game, enc, {})
++  -- Presentation metadata samples the hooked water, not the trainer's bank.
++  -- The native battle terrain still comes from the player's destination tile.
++  local encounterContext
++  if fishOpts then
++    local Map = require("src.core.game3.map")
++    local def = Map.currentDef() or {}
++    local behavior = require("src.core.game3.collision").behavior(fishOpts.x, fishOpts.y)
++    local terrain = require("src.core.game3.battle.bg").resolveFromBehavior(
++      behavior, def.kind, def.mapType, { mapId = mapId, surfing = false })
++    encounterContext = { source = "fishing", mapId = mapId,
++      x = fishOpts.x, y = fishOpts.y, terrain = terrain }
++  end
++  local ok, err = BattleBridge.startWild(Runtime and Runtime._mod, Field._game, enc,
++    { encounterContext = encounterContext })
+   if not ok then
+     print("[game3/field] fishing startWild failed: " .. tostring(err))
+     return false
+--- a/src/core/game3/battle_bridge.lua
++++ b/src/core/game3/battle_bridge.lua
+@@ -521,6 +521,7 @@
+     mapBehavior = mapBehavior,
+     mapBattleScene = mapBattleScene,
+     terrain = opts.terrain,
++    encounterContext = opts.encounterContext, -- optional presentation-only metadata
+     trainerId = opts.trainerId or (foe and foe.trainerId),
+     -- pokefirered/src/trainer_tower.c:735 BATTLE_TYPE_TRAINER_TOWER
+     trainerTower = opts.trainerTower or (foe and foe.trainerTower),
+--- a/src/core/game3/battle/init.lua
++++ b/src/core/game3/battle/init.lua
+@@ -515,6 +515,15 @@
+     -- pokeemerald/src/battle_tower.c:2124
+     playerHalf = (double and opts.partner and not multi) and opts.playerHalf or nil,
+   })
++  -- Copy only primitive presentation data; never use it for terrain mechanics.
++  if type(opts.encounterContext) == "table" then
++    local c = opts.encounterContext
++    st.encounterContext = {
++      source = type(c.source) == "string" and c.source or nil,
++      mapId = type(c.mapId) == "string" and c.mapId or nil,
++      x = tonumber(c.x), y = tonumber(c.y), terrain = tonumber(c.terrain),
++    }
++  end
+   if st.multi then
+     -- pokefirered/src/battle_controllers.c:223
+     st.linkOwn = tonumber(multi.own)

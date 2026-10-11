@@ -1,0 +1,35 @@
+diff --git a/src/core/game3/battle/ui.lua b/src/core/game3/battle/ui.lua
+--- a/src/core/game3/battle/ui.lua
++++ b/src/core/game3/battle/ui.lua
+@@ -72,6 +72,7 @@
+ -- Rules/state never consume it; the mod binds an exact battle.
+ Ui.presentationApiVersion = 2
+ Ui.presentationHudVersion = 1
++Ui.presentationSlotsVersion = 1
+ Ui.presentation = nil
+ 
+ -- pokefirered/src/battle_script_commands.c:5149
+@@ -1922,7 +1923,7 @@
+ --- Draw mon pic at GetBattlerSpriteFinal_Y center (64×64 → TL = center−32).
+ -- Applies Anim present offsets / alpha / visibility / z (Dig/Fly hide).
+ local function draw_mon_sprite(battler, base, back, id)
+-  if Ui.presentation and Ui.presentation.drawBattler and Ui.presentation.drawBattler(back and "player" or "enemy", battler) then return end
++  if Ui.presentation and Ui.presentation.drawBattler and Ui.presentation.drawBattler(back and "player" or "enemy", battler, id) then return end
+   if not battler then return end
+   local side = back and "player" or "enemy"
+   local key = id or side
+@@ -1988,12 +1989,12 @@
+     end
+     local hFlip = (pres and pres.hFlip) and true or false
+     if Ui.presentation and Ui.presentation.frontSprites and back and not dollImg then hFlip = not hFlip end
+-    if Ui.presentation and Ui.presentation.scale then scale = scale * Ui.presentation.scale(side, sp, form) end
++    if Ui.presentation and Ui.presentation.scale then scale = scale * Ui.presentation.scale(side, sp, form, id) end
+     local sx = (hFlip and -1 or 1) * scale * ((pres and pres.sx) or 1)
+     local sy = scale * ((pres and pres.sy) or 1)
+     local rot = (pres and pres.rotation) or 0
+     if Ui.presentation and Ui.presentation.poseCenter then
+-      local x, y = Ui.presentation.poseCenter(back and "player" or "enemy", entry.image, cx, cy, rot, sx, sy, pres, battler)
++      local x, y = Ui.presentation.poseCenter(back and "player" or "enemy", entry.image, cx, cy, rot, sx, sy, pres, battler, id)
+       if x ~= nil then cx, cy = x, y end
+     end
+     local blended

@@ -1,0 +1,1367 @@
+{
+  "version": 1,
+  "quality": 90,
+  "files": {
+    "altering-layered-v1.png": {
+      "color": "altering-layered-v1.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "altering-layered-v1.alpha.png",
+      "alpha_sha256": "4363527a6167d7bb5c7311ff8b0b40011c20c26e0ce539854eedb3b9564a5c1e"
+    },
+    "aqua-floor-paper.png": {
+      "color": "aqua-floor-paper.color.jpg",
+      "width": 1254,
+      "height": 1254
+    },
+    "aqua-layered-v2.png": {
+      "color": "aqua-layered-v2.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "aqua-layered-v2.alpha.png",
+      "alpha_sha256": "549e86097b2fe74681cf6fc5c97c09a9276b207c8d33433d21e88f73a6a40823"
+    },
+    "aqua-paper.png": {
+      "color": "aqua-paper.color.jpg",
+      "width": 1448,
+      "height": 1086
+    },
+    "artisan-layered-v1.png": {
+      "color": "artisan-layered-v1.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "artisan-layered-v1.alpha.png",
+      "alpha_sha256": "a20b963f177f47fd019e9a423a121f6d116b9d8701973541becd2c94ec310986"
+    },
+    "ash-layered-v2.png": {
+      "color": "ash-layered-v2.color.jpg",
+      "width": 1254,
+      "height": 1254,
+      "alpha": "ash-layered-v2.alpha.png",
+      "alpha_sha256": "15f44ed9f6f8ecba650c735c670e40020fd50838744c2ca5ebd0b02ec3e4128d"
+    },
+    "basalt-floor.png": {
+      "color": "basalt-floor.color.jpg",
+      "width": 1254,
+      "height": 1254
+    },
+    "baseevent-base_cave-kit.png": {
+      "color": "baseevent-base_cave-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "baseevent-base_cave-kit.alpha.png",
+      "alpha_sha256": "64e02baebd5bfa07ffd3293ccc0a42b2048777b04680c86e141e74f3506c0406"
+    },
+    "baseevent-base_garden-kit.png": {
+      "color": "baseevent-base_garden-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "baseevent-base_garden-kit.alpha.png",
+      "alpha_sha256": "daa802c537c96f869ee0ab9780e7911918b81be347aac1b5078c8b964255a059"
+    },
+    "baseevent-base_wood-kit.png": {
+      "color": "baseevent-base_wood-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "baseevent-base_wood-kit.alpha.png",
+      "alpha_sha256": "8bdac5f3008dfe400868c1506640ee750c1c872a97c2c876fd2d171afafd76b8"
+    },
+    "baseevent-navel_sky-kit.png": {
+      "color": "baseevent-navel_sky-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "baseevent-navel_sky-kit.alpha.png",
+      "alpha_sha256": "6b16af06cf5a2e347c8ba0bace2353ddc996019dbd0a775e20fb13ed2e6327e2"
+    },
+    "baseevent-navel_tide-kit.png": {
+      "color": "baseevent-navel_tide-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "baseevent-navel_tide-kit.alpha.png",
+      "alpha_sha256": "9c7af00df1e49d8bd00ecd32c05cfac371e7dc4cb5ace74d2d0a5f3229e4c8df"
+    },
+    "baseevent-submerged_wreck-kit.png": {
+      "color": "baseevent-submerged_wreck-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "baseevent-submerged_wreck-kit.alpha.png",
+      "alpha_sha256": "1c75e703920e91088d9c46736014490801bb0473e2d3a570afacb7d2b89b7d55"
+    },
+    "birth-island-paper.png": {
+      "color": "birth-island-paper.color.jpg",
+      "width": 1448,
+      "height": 1086
+    },
+    "cave-floor.png": {
+      "color": "cave-floor.color.jpg",
+      "width": 1254,
+      "height": 1254
+    },
+    "cave-paper-v2.png": {
+      "color": "cave-paper-v2.color.jpg",
+      "width": 1448,
+      "height": 1086
+    },
+    "city-floor.png": {
+      "color": "city-floor.color.jpg",
+      "width": 1254,
+      "height": 1254
+    },
+    "city-timber-floor.png": {
+      "color": "city-timber-floor.color.jpg",
+      "width": 1254,
+      "height": 1254
+    },
+    "civic-details-v1.png": {
+      "color": "civic-details-v1.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "civic-details-v1.alpha.png",
+      "alpha_sha256": "4374ba848e75534040f325e3ecd9433aecb7b7a2533b0d825e8c137978ae057e"
+    },
+    "coast-botanical-v2.png": {
+      "color": "coast-botanical-v2.color.jpg",
+      "width": 1254,
+      "height": 1254,
+      "alpha": "coast-botanical-v2.alpha.png",
+      "alpha_sha256": "db26c4460a2dc6693a0b9b813f8b975d2de67efe07f2a3ac78f303660682fdf4"
+    },
+    "coastal-details-v1.png": {
+      "color": "coastal-details-v1.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "coastal-details-v1.alpha.png",
+      "alpha_sha256": "e123ad897d4560b1daa646949de7a0cdf85a3c83cb77a5cf16b492cc09910a8d"
+    },
+    "crater-details.png": {
+      "color": "crater-details.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "crater-details.alpha.png",
+      "alpha_sha256": "19b809388d79a9a216608d6fd1c8b7ce159779b8f023c46960cb66817c1da663"
+    },
+    "crater-floor.png": {
+      "color": "crater-floor.color.jpg",
+      "width": 1254,
+      "height": 1254
+    },
+    "crater-landscape.png": {
+      "color": "crater-landscape.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "crater-landscape.alpha.png",
+      "alpha_sha256": "2177480ed826fd77e6ea36a357a03ff6b5ffdc294bf1dfd284f49d06f9ee25b3"
+    },
+    "deepcave-foreground.png": {
+      "color": "deepcave-foreground.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "deepcave-foreground.alpha.png",
+      "alpha_sha256": "d2968efc92c5727e7eedd4a73997ea7ea5ae88a551cb5c286ce0964a1b7cf793"
+    },
+    "deepcave-granite-kit.png": {
+      "color": "deepcave-granite-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "deepcave-granite-kit.alpha.png",
+      "alpha_sha256": "06b41b3e447207cc0379b3fd4d94e1f28908e86f0f0173a2fe54c74a72afcbda"
+    },
+    "deepcave-marine-kit.png": {
+      "color": "deepcave-marine-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "deepcave-marine-kit.alpha.png",
+      "alpha_sha256": "a38475038e1ccafeace82084c9f661df12bc2e4f135dae0ba546ee6131c64b41"
+    },
+    "deepcave-meteor-kit.png": {
+      "color": "deepcave-meteor-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "deepcave-meteor-kit.alpha.png",
+      "alpha_sha256": "1a9be703cdf188d49301ea03294940841b9ec24ec771fb4985210f831a6a6523"
+    },
+    "deepcave-ochre-floor.png": {
+      "color": "deepcave-ochre-floor.color.jpg",
+      "width": 1254,
+      "height": 1254
+    },
+    "deepcave-origin-kit.png": {
+      "color": "deepcave-origin-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "deepcave-origin-kit.alpha.png",
+      "alpha_sha256": "8bcc1f7d263e65e2116fcefa6c6021deb959fff30c045e50cbebe1bbd7e14310"
+    },
+    "deepcave-seafloor-kit.png": {
+      "color": "deepcave-seafloor-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "deepcave-seafloor-kit.alpha.png",
+      "alpha_sha256": "3d473ab7dd3d3891c833c57e2154b48a27dceb32c336822097b7480a358a597f"
+    },
+    "deepcave-terra-kit.png": {
+      "color": "deepcave-terra-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "deepcave-terra-kit.alpha.png",
+      "alpha_sha256": "91d19044bbb12e4a8b8bbe82abb49a1864dfe301ff1a25a6afa0f5fbd65c0d7c"
+    },
+    "deepcave-water-floor.png": {
+      "color": "deepcave-water-floor.color.jpg",
+      "width": 1254,
+      "height": 1254
+    },
+    "desert-layered-v2.png": {
+      "color": "desert-layered-v2.color.jpg",
+      "width": 1254,
+      "height": 1254,
+      "alpha": "desert-layered-v2.alpha.png",
+      "alpha_sha256": "dabf020a3fcc6d4706bbb8bac6d9ee2830e76c8ffb350ca2e4891e609dab511d"
+    },
+    "floating-details.png": {
+      "color": "floating-details.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "floating-details.alpha.png",
+      "alpha_sha256": "e2137f772bedd38964b5eb3952cca6b6099ff765fa82362903d8a6f01c597819"
+    },
+    "floating-landscape.png": {
+      "color": "floating-landscape.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "floating-landscape.alpha.png",
+      "alpha_sha256": "7464c9bb1579a633a0bbb9316b10ad47a8837029b343e19c6f6ac195271f2dc1"
+    },
+    "floating-water-floor.png": {
+      "color": "floating-water-floor.color.jpg",
+      "width": 1254,
+      "height": 1254
+    },
+    "floor.jpg": {
+      "color": "floor.color.jpg",
+      "width": 768,
+      "height": 768
+    },
+    "frontier-arena-floor.png": {
+      "color": "frontier-arena-floor.color.jpg",
+      "width": 1254,
+      "height": 1254
+    },
+    "frontier-arena-kit.png": {
+      "color": "frontier-arena-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "frontier-arena-kit.alpha.png",
+      "alpha_sha256": "b2d45f47563b4fb9e219fd06d3bc8585cab36845356afeda4c22de90a2958adc"
+    },
+    "frontier-dome-floor.png": {
+      "color": "frontier-dome-floor.color.jpg",
+      "width": 1254,
+      "height": 1254
+    },
+    "frontier-dome-kit.png": {
+      "color": "frontier-dome-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "frontier-dome-kit.alpha.png",
+      "alpha_sha256": "d9ee047ff40ed6e743bece35914e6129b36372654a69805654516fcb32c98220"
+    },
+    "frontier-factory-floor.png": {
+      "color": "frontier-factory-floor.color.jpg",
+      "width": 1254,
+      "height": 1254
+    },
+    "frontier-factory-kit.png": {
+      "color": "frontier-factory-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "frontier-factory-kit.alpha.png",
+      "alpha_sha256": "dc4ca5f4beeeeb2255b489a465d8c803c877f64e7100213d39d6bbe47a5c9994"
+    },
+    "frontier-palace-kit.png": {
+      "color": "frontier-palace-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "frontier-palace-kit.alpha.png",
+      "alpha_sha256": "e2923194335d164a785c860070fa800d910b6c0852524f4822f1c1f834eefc6d"
+    },
+    "frontier-pike-floor.png": {
+      "color": "frontier-pike-floor.color.jpg",
+      "width": 1254,
+      "height": 1254
+    },
+    "frontier-pike-kit.png": {
+      "color": "frontier-pike-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "frontier-pike-kit.alpha.png",
+      "alpha_sha256": "83d4222b345b4e2584e0e9a5ced8f72d5e61ac952a8ccc0da1c2080b3b8def16"
+    },
+    "frontier-pyramid-floor.png": {
+      "color": "frontier-pyramid-floor.color.jpg",
+      "width": 1254,
+      "height": 1254
+    },
+    "frontier-pyramid-kit.png": {
+      "color": "frontier-pyramid-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "frontier-pyramid-kit.alpha.png",
+      "alpha_sha256": "99ed199f69744dd0ab8b25eec86ca8919b5cd842220bf27b389fffe74f04caf6"
+    },
+    "frontier-tower-floor.png": {
+      "color": "frontier-tower-floor.color.jpg",
+      "width": 1254,
+      "height": 1254
+    },
+    "frontier-tower-kit.png": {
+      "color": "frontier-tower-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "frontier-tower-kit.alpha.png",
+      "alpha_sha256": "0e4570b151ac2823c8e38ebf5e821f74d6e1dc758f4d280f5f57b9235f780e5d"
+    },
+    "frost-floor.png": {
+      "color": "frost-floor.color.jpg",
+      "width": 1254,
+      "height": 1254
+    },
+    "frost-structure.png": {
+      "color": "frost-structure.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "frost-structure.alpha.png",
+      "alpha_sha256": "d6f30308ba9056d725f060c953069196f194e16907bdee2f6750ff3d55856b06"
+    },
+    "garden-details-v1.png": {
+      "color": "garden-details-v1.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "garden-details-v1.alpha.png",
+      "alpha_sha256": "ac271093b62a38a59fabd4b68a9288830428b63e363f7b091f55f4e132237792"
+    },
+    "granite-layered-v2.png": {
+      "color": "granite-layered-v2.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "granite-layered-v2.alpha.png",
+      "alpha_sha256": "cd47044e9c0661cd1dc0e3c6db73c97d57e79d39ccfce512722ade29f9112613"
+    },
+    "green-details-v3.png": {
+      "color": "green-details-v3.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "green-details-v3.alpha.png",
+      "alpha_sha256": "2cfe7c2ead4a378d7c05105fadf1d7aeb0254742e440240cb34902490908ada6"
+    },
+    "green-foliage-v3.png": {
+      "color": "green-foliage-v3.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "green-foliage-v3.alpha.png",
+      "alpha_sha256": "72e0e9ab0848eb879c91c5920f288909eebcae05c45cdbf0a37491cf132e9985"
+    },
+    "green-structure-v3.png": {
+      "color": "green-structure-v3.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "green-structure-v3.alpha.png",
+      "alpha_sha256": "ca5e14c01c456e58601d3ea7929133551fefb5d248dbca702faaa77b67871ac9"
+    },
+    "gym-electric-atlas.png": {
+      "color": "gym-electric-atlas.color.jpg",
+      "width": 1254,
+      "height": 1254,
+      "alpha": "gym-electric-atlas.alpha.png",
+      "alpha_sha256": "7a6a186889be5cd5f84e8451d878658082101c23cd658b6cfb56a5ff83f1738e"
+    },
+    "gym-electric-layers.png": {
+      "color": "gym-electric-layers.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "gym-electric-layers.alpha.png",
+      "alpha_sha256": "2252baee42333084db1341159b2887e454ffb63c58e6ec866189106f99c42184"
+    },
+    "gym-fighting-atlas.png": {
+      "color": "gym-fighting-atlas.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "gym-fighting-atlas.alpha.png",
+      "alpha_sha256": "dfe4d254c24d1714ee9eabea7e1fb0d8ef7e8b5714b4e6d3b791453986334745"
+    },
+    "gym-fighting-layers.png": {
+      "color": "gym-fighting-layers.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "gym-fighting-layers.alpha.png",
+      "alpha_sha256": "49ebaf960c75b0a41c7063a4ec12355f01847b7a421e275d4295053b32167af3"
+    },
+    "gym-normal-atlas.png": {
+      "color": "gym-normal-atlas.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "gym-normal-atlas.alpha.png",
+      "alpha_sha256": "e036599919cd3a6d6a991989ac503a5532c2b20b09ca9059ac1cceae6aa8e567"
+    },
+    "gym-normal-layers.png": {
+      "color": "gym-normal-layers.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "gym-normal-layers.alpha.png",
+      "alpha_sha256": "dd10fa5a514bfd87f82cf71339eddae0004a3dbe2a87bb98c18120a62f2bcc92"
+    },
+    "gym-psychic-atlas.png": {
+      "color": "gym-psychic-atlas.color.jpg",
+      "width": 1254,
+      "height": 1254,
+      "alpha": "gym-psychic-atlas.alpha.png",
+      "alpha_sha256": "8896f30132311948b462f530c8b9118996a5de5c9e02d0b72c41be5bfdf44fe5"
+    },
+    "gym-psychic-layers.png": {
+      "color": "gym-psychic-layers.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "gym-psychic-layers.alpha.png",
+      "alpha_sha256": "2db772a0d6e9185591d7e40abb171b20b22738541b5ba7ee8a104cee5b7c75a2"
+    },
+    "gym-sky-atlas.png": {
+      "color": "gym-sky-atlas.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "gym-sky-atlas.alpha.png",
+      "alpha_sha256": "f1869df2b3451a494a85767d8a7e5baa9833bbf7e5db717897e2c2e94d9d06ad"
+    },
+    "gym-sky-layers.png": {
+      "color": "gym-sky-layers.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "gym-sky-layers.alpha.png",
+      "alpha_sha256": "0a6ad4d6b52c622d180c2438d2c5e945d5bda1fdb57f2c1c02789f7e8ae6a3bb"
+    },
+    "gym-steam-atlas.png": {
+      "color": "gym-steam-atlas.color.jpg",
+      "width": 1254,
+      "height": 1254,
+      "alpha": "gym-steam-atlas.alpha.png",
+      "alpha_sha256": "5f0f563cb1aa5231319adeaebb6b79e2da8739a425d60e6d2c38b88f16348d69"
+    },
+    "gym-steam-layers.png": {
+      "color": "gym-steam-layers.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "gym-steam-layers.alpha.png",
+      "alpha_sha256": "0aa2412190942b587cbd0f10b4b50c737993e61ce0ae8be4513a976173376c4d"
+    },
+    "gym-water-atlas.png": {
+      "color": "gym-water-atlas.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "gym-water-atlas.alpha.png",
+      "alpha_sha256": "0bfb75d6f8193f9f4bba0352d78b195fc27c2c1cc0c126dc5ae8002cb3bb46e2"
+    },
+    "gym-water-layers.png": {
+      "color": "gym-water-layers.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "gym-water-layers.alpha.png",
+      "alpha_sha256": "3ddd123e1d37bd38da6af953126e5f1c16cef920d5d8e796d7a161fd25807e4c"
+    },
+    "ice-layered-v2.png": {
+      "color": "ice-layered-v2.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "ice-layered-v2.alpha.png",
+      "alpha_sha256": "902215e405345bf4e32a49c8cfae56f0912be4f1d138e35116c2d2fc1d5e89a9"
+    },
+    "kanto-details.png": {
+      "color": "kanto-details.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "kanto-details.alpha.png",
+      "alpha_sha256": "70188e52cb6d178d7fc1ceb79c1e98b784370caff2014c200f42140a9ede7541"
+    },
+    "kanto-gym-popup-a-v4.png": {
+      "color": "kanto-gym-popup-a-v4.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "kanto-gym-popup-a-v4.alpha.png",
+      "alpha_sha256": "6bf7b0234404a35cf3d0f46dd6f8d09940413cf5c8f7894e055ecdee92b6e14c"
+    },
+    "kanto-gym-popup-b-v4.png": {
+      "color": "kanto-gym-popup-b-v4.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "kanto-gym-popup-b-v4.alpha.png",
+      "alpha_sha256": "147dfe1bc81cab5aadf0fba48a74bf68332a4f6d3ae6511ff75b67862b6c88fd"
+    },
+    "kanto-indigo-floor-v2.png": {
+      "color": "kanto-indigo-floor-v2.color.jpg",
+      "width": 1254,
+      "height": 1254
+    },
+    "kanto-indigo-parts-v2.png": {
+      "color": "kanto-indigo-parts-v2.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "kanto-indigo-parts-v2.alpha.png",
+      "alpha_sha256": "525ed6912abeebef78fb206c6ebef373c43d76f00bbaac7b46f5df34e4160b69"
+    },
+    "kanto-interiors.png": {
+      "color": "kanto-interiors.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "kanto-interiors.alpha.png",
+      "alpha_sha256": "1b91c6b7dc92af9a8fa768f9f1454aa8393feb82b19ce36b2d35cfc0b75d5637"
+    },
+    "kanto-misty-popup-v4.png": {
+      "color": "kanto-misty-popup-v4.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "kanto-misty-popup-v4.alpha.png",
+      "alpha_sha256": "4dcd6d423587126d102594c14b1e261e28fc535442468749483a726863e7ce23"
+    },
+    "kanto-reference-corrections-v3.png": {
+      "color": "kanto-reference-corrections-v3.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "kanto-reference-corrections-v3.alpha.png",
+      "alpha_sha256": "b3102d17e1e0b82f51fa0f2c18adf50ace117517f8bed41307db316160d7c471"
+    },
+    "kanto-reference-finishing-v3.png": {
+      "color": "kanto-reference-finishing-v3.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "kanto-reference-finishing-v3.alpha.png",
+      "alpha_sha256": "72b662c3bc3b46eaab9c7c381e8f6a159241e9613557945b5d98fd78439ed057"
+    },
+    "kanto-reference-floors-v3.png": {
+      "color": "kanto-reference-floors-v3.color.jpg",
+      "width": 1536,
+      "height": 1024
+    },
+    "kanto-reference-gyms-v3.png": {
+      "color": "kanto-reference-gyms-v3.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "kanto-reference-gyms-v3.alpha.png",
+      "alpha_sha256": "8b9df2467136477d68fdcc3600f64532c2414dd3a840e45f4d0a28605b46e71d"
+    },
+    "kanto-reference-landmarks-v3.png": {
+      "color": "kanto-reference-landmarks-v3.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "kanto-reference-landmarks-v3.alpha.png",
+      "alpha_sha256": "0718e4569030334c6b52a9df810f8f0fc932a2d2cd7dd6fe864256e05e5c7850"
+    },
+    "kanto-reference-league-v3.png": {
+      "color": "kanto-reference-league-v3.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "kanto-reference-league-v3.alpha.png",
+      "alpha_sha256": "c931e6cb1acef8ecc823c96b83656ffe30fa04a4c60034442dfdeb86c437e576"
+    },
+    "kanto-reference-nature-v3.png": {
+      "color": "kanto-reference-nature-v3.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "kanto-reference-nature-v3.alpha.png",
+      "alpha_sha256": "aa3ff36fe6c930bf994fa412f0e7359edd4d34e991f8c73d737ccb5fbb731f52"
+    },
+    "kanto-reference-rooms-v3.png": {
+      "color": "kanto-reference-rooms-v3.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "kanto-reference-rooms-v3.alpha.png",
+      "alpha_sha256": "d449ce9119d47e3ffb6f32a3fbc55da6184ef64eedaeee2c0dc1893f3d88e427"
+    },
+    "kanto-reference-services-v3.png": {
+      "color": "kanto-reference-services-v3.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "kanto-reference-services-v3.alpha.png",
+      "alpha_sha256": "16d29ced723a2a06aac26f68dc32d5871747e837e6ea7316b6a9b29ee65b7d72"
+    },
+    "kanto-reference-terrain-v3.png": {
+      "color": "kanto-reference-terrain-v3.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "kanto-reference-terrain-v3.alpha.png",
+      "alpha_sha256": "9f2e0ad6169e988e264659f5d3ff095ca8ce719ef18e9c1a604820d5b52bc79a"
+    },
+    "kanto-reference-towns-v3.png": {
+      "color": "kanto-reference-towns-v3.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "kanto-reference-towns-v3.alpha.png",
+      "alpha_sha256": "3e637a3f70398e381a1672a495c4dcd4c0b3a342c22887673fad7b9b116cd03e"
+    },
+    "kanto-relics.png": {
+      "color": "kanto-relics.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "kanto-relics.alpha.png",
+      "alpha_sha256": "c5416a03588c0509fdad6b45d84cc9a88d88ed2b358b54e38d1ae5f2b9640d0f"
+    },
+    "kanto-signatures.png": {
+      "color": "kanto-signatures.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "kanto-signatures.alpha.png",
+      "alpha_sha256": "3384373400581d3c6fb0a92a44b1bb0f13b252537075977233bad73e8dfe7066"
+    },
+    "kanto-structure.png": {
+      "color": "kanto-structure.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "kanto-structure.alpha.png",
+      "alpha_sha256": "ec92d242f105f7230327a6fc531ecd88066d43249068577e0e9e1680b97efba1"
+    },
+    "kanto-towns.png": {
+      "color": "kanto-towns.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "kanto-towns.alpha.png",
+      "alpha_sha256": "346a899cb6e1ae6735a6db90aa70f007be738285fd0ef47375c45d5bc283f778"
+    },
+    "kyogre-shadow.png": {
+      "color": "kyogre-shadow.color.jpg",
+      "width": 1254,
+      "height": 1254,
+      "alpha": "kyogre-shadow.alpha.png",
+      "alpha_sha256": "f40e49a8628a23231eca377384285e9e4a9bb179c174c71b3d56f85ba7b22bdf"
+    },
+    "landscape.jpg": {
+      "color": "landscape.color.jpg",
+      "width": 1448,
+      "height": 1086
+    },
+    "league-champion-kit.png": {
+      "color": "league-champion-kit.color.jpg",
+      "width": 1254,
+      "height": 1254,
+      "alpha": "league-champion-kit.alpha.png",
+      "alpha_sha256": "2af3ceba0621f8a64a8e236fe9f9750b007a2a01196bd0ab9b1ce4dcdbf667a0"
+    },
+    "league-dark-kit.png": {
+      "color": "league-dark-kit.color.jpg",
+      "width": 1254,
+      "height": 1254,
+      "alpha": "league-dark-kit.alpha.png",
+      "alpha_sha256": "bfc9e0c4285f3d609ca68096cd57bf4c03fff6f3a852b79bdf8d1bbd5505d41c"
+    },
+    "league-dragon-kit.png": {
+      "color": "league-dragon-kit.color.jpg",
+      "width": 1254,
+      "height": 1254,
+      "alpha": "league-dragon-kit.alpha.png",
+      "alpha_sha256": "ab8cc5d06bd071a07887e66de6e25105e8508f82b3c64d2c6011e8b83c639bd0"
+    },
+    "league-ghost-kit.png": {
+      "color": "league-ghost-kit.color.jpg",
+      "width": 1254,
+      "height": 1254,
+      "alpha": "league-ghost-kit.alpha.png",
+      "alpha_sha256": "7a342b8aba8034b44ddc6814ab39cd3cba26221a9c64094ec1c6e3c13cd737b9"
+    },
+    "league-ice-kit.png": {
+      "color": "league-ice-kit.color.jpg",
+      "width": 1254,
+      "height": 1254,
+      "alpha": "league-ice-kit.alpha.png",
+      "alpha_sha256": "9e3b591797bb9a0005d92d3b5c16a5dc0861756b6aa20ec53c704eb71e0e8786"
+    },
+    "link-colosseum-kit.png": {
+      "color": "link-colosseum-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "link-colosseum-kit.alpha.png",
+      "alpha_sha256": "b1bc5a46a388a068a8ec5737ce9e393f33f403167111831eee3375ce08234c5f"
+    },
+    "marine-layered-v2.png": {
+      "color": "marine-layered-v2.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "marine-layered-v2.alpha.png",
+      "alpha_sha256": "9afde36e1f4f09bad88da0dc6c50e02376152a342d35ff590015257861946de4"
+    },
+    "meadow-details-v2.png": {
+      "color": "meadow-details-v2.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "meadow-details-v2.alpha.png",
+      "alpha_sha256": "cad5269dfa4083365b1aaebe4e7b5c50b229aa5726dfb5a95fe24a54a0a87ca2"
+    },
+    "meadow-floor-v2.png": {
+      "color": "meadow-floor-v2.color.jpg",
+      "width": 1254,
+      "height": 1254
+    },
+    "meadow-landscape-v2.png": {
+      "color": "meadow-landscape-v2.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "meadow-landscape-v2.alpha.png",
+      "alpha_sha256": "323e04251aa5c50575a496284d741c5035aab7cd5b0680327e75a215b9c46772"
+    },
+    "meteor-layered-v2.png": {
+      "color": "meteor-layered-v2.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "meteor-layered-v2.alpha.png",
+      "alpha_sha256": "a78035d6cebbfa4fb9aee4bdf038fce625966e6b3b2a90320cdbe952a8e75c99"
+    },
+    "mountain-layered-v2.png": {
+      "color": "mountain-layered-v2.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "mountain-layered-v2.alpha.png",
+      "alpha_sha256": "b7c35299800ec89a28c6e33cb6c43a6c6d780ec468fa8811cf2285b629242fbd"
+    },
+    "nature-events-v1.png": {
+      "color": "nature-events-v1.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "nature-events-v1.alpha.png",
+      "alpha_sha256": "f62e2007bc7352f25c0f55f4a5cb5d54a3cf1b19587b9223221fc51997bdd1de"
+    },
+    "origin-layered-v2.png": {
+      "color": "origin-layered-v2.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "origin-layered-v2.alpha.png",
+      "alpha_sha256": "5677557fdbcd9b3dae1c2137d20d40052ff5a1c6edffa8a64a3e548c709a4afd"
+    },
+    "paper.jpg": {
+      "color": "paper.color.jpg",
+      "width": 1448,
+      "height": 1086
+    },
+    "pavilion-details-v1.png": {
+      "color": "pavilion-details-v1.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "pavilion-details-v1.alpha.png",
+      "alpha_sha256": "b1cfe72ed56621fa9e26a374723fbf06a531a9dd4420ee8862a3928ea71f3fe8"
+    },
+    "pond-botanical-v2.png": {
+      "color": "pond-botanical-v2.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "pond-botanical-v2.alpha.png",
+      "alpha_sha256": "33c85e7df8923f5ccab673c705ab32fe303ad6ea04436f3043a4d2c6101290c4"
+    },
+    "pond-water-floor.png": {
+      "color": "pond-water-floor.color.jpg",
+      "width": 1254,
+      "height": 1254
+    },
+    "rainforest-layered-v2.png": {
+      "color": "rainforest-layered-v2.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "rainforest-layered-v2.alpha.png",
+      "alpha_sha256": "3f32ac8330b04eadf4788a15c5b98f8582e1736ed88dfff5f7d63ede78ea32b6"
+    },
+    "research-devon-kit.png": {
+      "color": "research-devon-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "research-devon-kit.alpha.png",
+      "alpha_sha256": "a3e566245c19eacf38a3ab3d72c5240c79989bdf10d9d46874c42d2defbf417e"
+    },
+    "research-hall-kit.png": {
+      "color": "research-hall-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "research-hall-kit.alpha.png",
+      "alpha_sha256": "2ae2aedfeeabec490de7a048ba9aa920b6a5ae413ea5bd19c5d36410f7cd3add"
+    },
+    "research-lab-kit.png": {
+      "color": "research-lab-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "research-lab-kit.alpha.png",
+      "alpha_sha256": "39e4b6322b574469fda17f83e422623be38c7318da1606c7282b6216e18f9a79"
+    },
+    "rock-gym-layered-v3.png": {
+      "color": "rock-gym-layered-v3.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "rock-gym-layered-v3.alpha.png",
+      "alpha_sha256": "76c74407391fd1cc7d90b86f74991d79d0ba5e535bedb93029f96876f2e3a826"
+    },
+    "room-hill-kit.png": {
+      "color": "room-hill-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "room-hill-kit.alpha.png",
+      "alpha_sha256": "c613a0d3f33956a900381b927cfd464b2530340342226daea3ee966d39bbae2d"
+    },
+    "room-liner-kit.png": {
+      "color": "room-liner-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "room-liner-kit.alpha.png",
+      "alpha_sha256": "28c8634c1bfee9b7d371e73693cbd0244c379dfbbc83e6cd96ac7046b6edf191"
+    },
+    "room-puzzle-kit.png": {
+      "color": "room-puzzle-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "room-puzzle-kit.alpha.png",
+      "alpha_sha256": "63deba1596f5b6da3fa9b9f7601e46e27677bffb0b7ece6de4325622fe652c4b"
+    },
+    "room-wreck-kit.png": {
+      "color": "room-wreck-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "room-wreck-kit.alpha.png",
+      "alpha_sha256": "8ca95fe0668fa27b77aeca03236c69dce664530bae93de6eec2b0c4aea053f66"
+    },
+    "route-ash-kit.png": {
+      "color": "route-ash-kit.color.jpg",
+      "width": 1254,
+      "height": 1254,
+      "alpha": "route-ash-kit.alpha.png",
+      "alpha_sha256": "60c277aab0daf16f57a1b12f7a4986f4efcfcb4e3ad7a49bb46b408616651296"
+    },
+    "route-coast-kit.png": {
+      "color": "route-coast-kit.color.jpg",
+      "width": 1254,
+      "height": 1254,
+      "alpha": "route-coast-kit.alpha.png",
+      "alpha_sha256": "f9e46e007abe023fea1bfda68306c814e349e579b02b9076f7a9468c31bde44e"
+    },
+    "route-desert-kit.png": {
+      "color": "route-desert-kit.color.jpg",
+      "width": 1254,
+      "height": 1254,
+      "alpha": "route-desert-kit.alpha.png",
+      "alpha_sha256": "e3672aa8fa2b800bf725e642a009a5e0e625ac801dc5295d29332db576d003bb"
+    },
+    "route-meadow-kit.png": {
+      "color": "route-meadow-kit.color.jpg",
+      "width": 1254,
+      "height": 1254,
+      "alpha": "route-meadow-kit.alpha.png",
+      "alpha_sha256": "3b8d81ce04edb00c43889b4f880b615a996c1bdd413f9f775a84f4d5e013645b"
+    },
+    "route-pond-kit.png": {
+      "color": "route-pond-kit.color.jpg",
+      "width": 1254,
+      "height": 1254,
+      "alpha": "route-pond-kit.alpha.png",
+      "alpha_sha256": "29335d0a30031ee25e2ae7e420a917bc839ab72247731c504be8c8940ba39d78"
+    },
+    "ruin-fossil-kit.png": {
+      "color": "ruin-fossil-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "ruin-fossil-kit.alpha.png",
+      "alpha_sha256": "c5ff9a077efd6739355c9a25198b45e6cf0404c60db28b88908cc241e61ba0e5"
+    },
+    "ruin-memorial-kit.png": {
+      "color": "ruin-memorial-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "ruin-memorial-kit.alpha.png",
+      "alpha_sha256": "28ca7d871b1d5c367eae80abaaa848f5f99872288ca4ca86e5b90c17e096f166"
+    },
+    "ruin-mirage-kit.png": {
+      "color": "ruin-mirage-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "ruin-mirage-kit.alpha.png",
+      "alpha_sha256": "5643e01f71e80279bf64ea216fa5c6ad80428d6661eff4226757bec38cea2894"
+    },
+    "ruin-pillar-kit.png": {
+      "color": "ruin-pillar-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "ruin-pillar-kit.alpha.png",
+      "alpha_sha256": "82564edeee8e5d03e8e4b2e6c1affdfb61e6d3c61abb79f44726a667b894d470"
+    },
+    "ruin-sealed-kit.png": {
+      "color": "ruin-sealed-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "ruin-sealed-kit.alpha.png",
+      "alpha_sha256": "e9d30e9b162709ac3f4ca8c950e8d038af57e9bdb723956bbf38b51ee48b9244"
+    },
+    "ruin-victory-kit.png": {
+      "color": "ruin-victory-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "ruin-victory-kit.alpha.png",
+      "alpha_sha256": "fff2306bf7b6b45db108ef47756b6305d4ab8103474cf6989381cf858650e7ba"
+    },
+    "rustboro-layered-v3.png": {
+      "color": "rustboro-layered-v3.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "rustboro-layered-v3.alpha.png",
+      "alpha_sha256": "d6c6c9c0146f272e246baafc0dd10b94f5cca7fe780171dc51d20d0c12debfdb"
+    },
+    "rusturf-layered-v1.png": {
+      "color": "rusturf-layered-v1.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "rusturf-layered-v1.alpha.png",
+      "alpha_sha256": "1450dba0ea6d4c4bd4c3cff27ab3f8b2feeeb4838726a3c2dea26476bad73167"
+    },
+    "safari-layered-v2.png": {
+      "color": "safari-layered-v2.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "safari-layered-v2.alpha.png",
+      "alpha_sha256": "b6eeff7fd18f965ad35ba19994c8928160dcc32153474883c3762af5352f304b"
+    },
+    "sea-composition-v3.png": {
+      "color": "sea-composition-v3.color.jpg",
+      "width": 1448,
+      "height": 1086
+    },
+    "sea-coral-v2.png": {
+      "color": "sea-coral-v2.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "sea-coral-v2.alpha.png",
+      "alpha_sha256": "1c0314025a8386b10d883fcd3104ce5f426c141cacfae3d6836f61ae1956e00b"
+    },
+    "sea-floor.png": {
+      "color": "sea-floor.color.jpg",
+      "width": 1254,
+      "height": 1254
+    },
+    "sea-landscape.png": {
+      "color": "sea-landscape.color.jpg",
+      "width": 1448,
+      "height": 1086
+    },
+    "sea-rock-columns-v2.png": {
+      "color": "sea-rock-columns-v2.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "sea-rock-columns-v2.alpha.png",
+      "alpha_sha256": "a700775258926e8026807066d74689c4796f79dc61fadf521ed2cd7dd0118427"
+    },
+    "seafloor-layered-v2.png": {
+      "color": "seafloor-layered-v2.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "seafloor-layered-v2.alpha.png",
+      "alpha_sha256": "9c028e8a52731f3cf096e2e8f9784d26178de74ebbec6dd34764d9859df50424"
+    },
+    "service-center-kit.png": {
+      "color": "service-center-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "service-center-kit.alpha.png",
+      "alpha_sha256": "41f0512d3d0f0c220507adb72e1a123e624c3c5633be149dc7054a5a81a04396"
+    },
+    "service-harbor-kit.png": {
+      "color": "service-harbor-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "service-harbor-kit.alpha.png",
+      "alpha_sha256": "a8e4815b491f383d58bc359c843e03cd0ea39a9c7bc7275fe68d7bed78ef094d"
+    },
+    "service-shop-kit.png": {
+      "color": "service-shop-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "service-shop-kit.alpha.png",
+      "alpha_sha256": "c5c70571bf213764172010ce2d1c1cd1557695f5bfadae0886089a127a071a3b"
+    },
+    "service-truck-kit.png": {
+      "color": "service-truck-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "service-truck-kit.alpha.png",
+      "alpha_sha256": "020490ffbc545b983c2866e170dfbcb14f8f115f559dbcbfebaf2217eb342a48"
+    },
+    "shell.jpg": {
+      "color": "shell.color.jpg",
+      "width": 1448,
+      "height": 1086
+    },
+    "sky-pillar-floor.png": {
+      "color": "sky-pillar-floor.color.jpg",
+      "width": 1254,
+      "height": 1254
+    },
+    "sky-pillar-kit.png": {
+      "color": "sky-pillar-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "sky-pillar-kit.alpha.png",
+      "alpha_sha256": "c183e978593e106843368301c3d1e2f623222a116d12111b6875513a7d1bb85a"
+    },
+    "space-test-model-v1.png": {
+      "color": "space-test-model-v1.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "space-test-model-v1.alpha.png",
+      "alpha_sha256": "dda374efbf33775655d9a6d0eb277fb9a86a101c67d3b869c29349ae8079176d"
+    },
+    "story-coldstone-floor.png": {
+      "color": "story-coldstone-floor.color.jpg",
+      "width": 1254,
+      "height": 1254
+    },
+    "story-electric-floor.png": {
+      "color": "story-electric-floor.color.jpg",
+      "width": 1254,
+      "height": 1254
+    },
+    "story-electric-kit.png": {
+      "color": "story-electric-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "story-electric-kit.alpha.png",
+      "alpha_sha256": "2c3499af6ce2408d74ce8537ca0cdf32b9df071191dd2017a7e54fede84d6ae5"
+    },
+    "story-regice-kit.png": {
+      "color": "story-regice-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "story-regice-kit.alpha.png",
+      "alpha_sha256": "42a75fb9dc03774bd8c74f9a0bfdf36800e8149ffaec08e8029332dca7d6486e"
+    },
+    "story-regirock-kit.png": {
+      "color": "story-regirock-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "story-regirock-kit.alpha.png",
+      "alpha_sha256": "a7b74e5b65245f57051884cce15cb0e6b8c95a876d4a5b1990d86214543c5203"
+    },
+    "story-registeel-kit.png": {
+      "color": "story-registeel-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "story-registeel-kit.alpha.png",
+      "alpha_sha256": "ba63607f54807c4db3e6c2a7f142fbaf1c12a30bf3b570850c920d844a5b9422"
+    },
+    "story-small-props.png": {
+      "color": "story-small-props.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "story-small-props.alpha.png",
+      "alpha_sha256": "59602a9ef74f0641068cfa79543eda958b9adf35a7027a32a6429d52f5457e35"
+    },
+    "story-space-kit.png": {
+      "color": "story-space-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "story-space-kit.alpha.png",
+      "alpha_sha256": "89a4ffb1eed46bb153d8a8b8ac3b6a0ecbd817eec13a2a2e90055abde9b0c297"
+    },
+    "story-weather-kit.png": {
+      "color": "story-weather-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "story-weather-kit.alpha.png",
+      "alpha_sha256": "e6a4ae18cedb6d93c2540a8af27a88b8e51421d1be74a8c681af88751716356f"
+    },
+    "terra-layered-v2.png": {
+      "color": "terra-layered-v2.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "terra-layered-v2.alpha.png",
+      "alpha_sha256": "5b46540d94e94643f2281b36bf315adf52e29a2464da7f04875a2c5d52e3d752"
+    },
+    "tidal-floor.png": {
+      "color": "tidal-floor.color.jpg",
+      "width": 1254,
+      "height": 1254
+    },
+    "tidal-layered-v2.png": {
+      "color": "tidal-layered-v2.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "tidal-layered-v2.alpha.png",
+      "alpha_sha256": "5d81b8def706f7ba781013314b7578757e87fff5f07ec428c9141771b5d451a3"
+    },
+    "tidal-structure.png": {
+      "color": "tidal-structure.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "tidal-structure.alpha.png",
+      "alpha_sha256": "773d150573d7e3125ac77613b2f3b0b910260f2ad754941a7ea15bc8ed5f9b01"
+    },
+    "town-dewford-kit.png": {
+      "color": "town-dewford-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "town-dewford-kit.alpha.png",
+      "alpha_sha256": "fcf696064960a049c59877f308c611601b1a518d03386583ce0b09ce43cee5c4"
+    },
+    "town-ever_grande-kit.png": {
+      "color": "town-ever_grande-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "town-ever_grande-kit.alpha.png",
+      "alpha_sha256": "4ec3054827727eb6303e9da19d9656ddfbbee3b4b635b962e7c10de387146787"
+    },
+    "town-fallarbor-kit.png": {
+      "color": "town-fallarbor-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "town-fallarbor-kit.alpha.png",
+      "alpha_sha256": "8b1f04573f0453b13e4c8cf4fd116d1b308e0b925dbfb71bbf5879360f57caf0"
+    },
+    "town-frontier-kit.png": {
+      "color": "town-frontier-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "town-frontier-kit.alpha.png",
+      "alpha_sha256": "de2f107c0b19a170591a6e8f0ff513fa9d6d72afcdc80945d3de7b368136e05c"
+    },
+    "town-lavaridge-kit.png": {
+      "color": "town-lavaridge-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "town-lavaridge-kit.alpha.png",
+      "alpha_sha256": "ef57a319fb733a03e73340383ae0b5c532207c0ce3d35659cfdefa050f99bf81"
+    },
+    "town-lilycove-kit.png": {
+      "color": "town-lilycove-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "town-lilycove-kit.alpha.png",
+      "alpha_sha256": "bd7c1b48b91cdfa248f3d6509210a4e853e777c76925476d42f33b5884f075b3"
+    },
+    "town-littleroot-kit.png": {
+      "color": "town-littleroot-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "town-littleroot-kit.alpha.png",
+      "alpha_sha256": "d1138c2b579325bcdc99e08f5b081a61de8751a520d8640cf780067f7a0cb6a9"
+    },
+    "town-mauville-kit.png": {
+      "color": "town-mauville-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "town-mauville-kit.alpha.png",
+      "alpha_sha256": "97d0c5219dec3f007836f451019ce88aa7606f5de0197ce8c6f6f626817f9579"
+    },
+    "town-mossdeep-kit.png": {
+      "color": "town-mossdeep-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "town-mossdeep-kit.alpha.png",
+      "alpha_sha256": "d5ee5ab02ee414524f914d703389bd5c9cf6e3c02c52010a4eb473627cf59726"
+    },
+    "town-museum-kit.png": {
+      "color": "town-museum-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "town-museum-kit.alpha.png",
+      "alpha_sha256": "e54397345cb04ddedcebac41b9ab29cb1418cb16bdcf150b36f14a22e590c078"
+    },
+    "town-oldale-kit.png": {
+      "color": "town-oldale-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "town-oldale-kit.alpha.png",
+      "alpha_sha256": "2a45515f4bed8ad2af551ad73ce537bfd5ddaab1610c514f5d17240c4c86f40a"
+    },
+    "town-petalburg-kit.png": {
+      "color": "town-petalburg-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "town-petalburg-kit.alpha.png",
+      "alpha_sha256": "32e14b6947dac9a19376b5858d8d71368b59e1b7f5d417a8f165de18f6816eb6"
+    },
+    "town-slateport-kit.png": {
+      "color": "town-slateport-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "town-slateport-kit.alpha.png",
+      "alpha_sha256": "212438345cfe416f5be34ff06b6cbb345917679e24ef19d3bcb44740fd6974a9"
+    },
+    "town-tent_fallarbor-kit.png": {
+      "color": "town-tent_fallarbor-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "town-tent_fallarbor-kit.alpha.png",
+      "alpha_sha256": "afb40ce67f02cf64efb8ea649b92fa435f7e62ff6f7ea4948019f7aee4c3973c"
+    },
+    "town-tent_slateport-kit.png": {
+      "color": "town-tent_slateport-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "town-tent_slateport-kit.alpha.png",
+      "alpha_sha256": "be58b73d6c0970a6a32591b34807c6f75021986349151064aefefd5b91200930"
+    },
+    "town-tent_verdanturf-kit.png": {
+      "color": "town-tent_verdanturf-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "town-tent_verdanturf-kit.alpha.png",
+      "alpha_sha256": "ee69e9724e55e680192352d1d92df4388e03bf772b850dbea2d3e9580abadbfb"
+    },
+    "town-verdanturf-kit.png": {
+      "color": "town-verdanturf-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "town-verdanturf-kit.alpha.png",
+      "alpha_sha256": "e4aa2eca85189fc83bd373416e0acb2f56a448b0df82272f64ebb666d54a9a99"
+    },
+    "treecity-details.png": {
+      "color": "treecity-details.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "treecity-details.alpha.png",
+      "alpha_sha256": "458230725ba8a37baa2a16909395ac48340d1b3f0453e0dc14ebaa138d06a279"
+    },
+    "treecity-landscape.png": {
+      "color": "treecity-landscape.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "treecity-landscape.alpha.png",
+      "alpha_sha256": "0230e55b4224ef3b9ef2c2e9308da95b6d994acf4709082dfbc70bc72a103a8d"
+    },
+    "undersea-braille-kit.png": {
+      "color": "undersea-braille-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "undersea-braille-kit.alpha.png",
+      "alpha_sha256": "d4a11d4db35449a292c436b0673eedf415a6877b92019eb0c2ae54e9ec4c078d"
+    },
+    "undersea-cavern-kit.png": {
+      "color": "undersea-cavern-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "undersea-cavern-kit.alpha.png",
+      "alpha_sha256": "f8f371364153e7ebd58b57337d597e53c4486637fcd2c36ee7182d6b8069a21f"
+    },
+    "undersea-crater-kit.png": {
+      "color": "undersea-crater-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "undersea-crater-kit.alpha.png",
+      "alpha_sha256": "9dddea92ad0bd1c5e2abc50575123d92299573d4ce6d0f695a6bd717d5c53b9d"
+    },
+    "undersea-marine-kit.png": {
+      "color": "undersea-marine-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "undersea-marine-kit.alpha.png",
+      "alpha_sha256": "06297264833aae15b915b017b5c8604e17327675e2caaa06ec96461fc87d9194"
+    },
+    "undersea-reef-kit.png": {
+      "color": "undersea-reef-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "undersea-reef-kit.alpha.png",
+      "alpha_sha256": "db7f7379ae1bd04158ea878ac8b06b7e86573b6e3a6d1618f74bbb3552337489"
+    },
+    "undersea-sand-floor.png": {
+      "color": "undersea-sand-floor.color.jpg",
+      "width": 1254,
+      "height": 1254
+    },
+    "victory-layered-v2.png": {
+      "color": "victory-layered-v2.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "victory-layered-v2.alpha.png",
+      "alpha_sha256": "e5f5866c1a203c6f6ff45ac05bafd91ed839fd16785c073defe0967daf41340f"
+    },
+    "volcanic-details.png": {
+      "color": "volcanic-details.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "volcanic-details.alpha.png",
+      "alpha_sha256": "37bd63f5e999f5f8637c7933438f08f940e66b5dafabd532a0885b4831efed62"
+    },
+    "volcanic-floor.png": {
+      "color": "volcanic-floor.color.jpg",
+      "width": 1254,
+      "height": 1254
+    },
+    "volcanic-layered-v2.png": {
+      "color": "volcanic-layered-v2.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "volcanic-layered-v2.alpha.png",
+      "alpha_sha256": "1a96bcbb2593d25413ac0ffe5c14ee238d72ed7760d890e234509dc22a70a5f1"
+    },
+    "volcanic-structure.png": {
+      "color": "volcanic-structure.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "volcanic-structure.alpha.png",
+      "alpha_sha256": "292215d100b498a9d546c9232b61614f9578c599ce057a061111cdf0c0386357"
+    },
+    "volcanic-town-details-v1.png": {
+      "color": "volcanic-town-details-v1.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "volcanic-town-details-v1.alpha.png",
+      "alpha_sha256": "6bfef9e1917448aad6888dbce940d4193b5e77e154b56fb0fe9850d7463730a5"
+    },
+    "wildplace-ancient-kit.png": {
+      "color": "wildplace-ancient-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "wildplace-ancient-kit.alpha.png",
+      "alpha_sha256": "5f839df8ca4874bdde221cf59c617e2f20e09fb2528a50e8bcd85e8db9c1edbd"
+    },
+    "wildplace-ash-kit.png": {
+      "color": "wildplace-ash-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "wildplace-ash-kit.alpha.png",
+      "alpha_sha256": "d57be8cc4016d52972b888dbb83b38df35513429586881c79307edf9b98754fa"
+    },
+    "wildplace-details.png": {
+      "color": "wildplace-details.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "wildplace-details.alpha.png",
+      "alpha_sha256": "ed6d9a3d5215fde92372031a14abce3b3888faad4340955cd0309be52e835b24"
+    },
+    "wildplace-floor.png": {
+      "color": "wildplace-floor.color.jpg",
+      "width": 1254,
+      "height": 1254
+    },
+    "wildplace-island-kit.png": {
+      "color": "wildplace-island-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "wildplace-island-kit.alpha.png",
+      "alpha_sha256": "b32eda159e4cfb69055976b9448b7401661c25490db113c0f0b3d8ff494c4826"
+    },
+    "wildplace-memorial-kit.png": {
+      "color": "wildplace-memorial-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "wildplace-memorial-kit.alpha.png",
+      "alpha_sha256": "6fb2926557f147ed96e09fafc8df3b4e92cef1584b263e679b163eda7afb5fac"
+    },
+    "wildplace-mountain-kit.png": {
+      "color": "wildplace-mountain-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "wildplace-mountain-kit.alpha.png",
+      "alpha_sha256": "143e6a25251e14d94e0fe41fc78afe9bf9efde377476e25c606bb3a528212c9d"
+    },
+    "wildplace-rainforest-kit.png": {
+      "color": "wildplace-rainforest-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "wildplace-rainforest-kit.alpha.png",
+      "alpha_sha256": "c11f8996e19f35af5385e4de31d658fda72d0b6de45de17697ce9205354e3b27"
+    },
+    "wildplace-safari-kit.png": {
+      "color": "wildplace-safari-kit.color.jpg",
+      "width": 1536,
+      "height": 1024,
+      "alpha": "wildplace-safari-kit.alpha.png",
+      "alpha_sha256": "cf71a69c296beb1dadff3ab93ce08027e2c1564d76cd38dca30eee9f58f4b0b5"
+    }
+  }
+}

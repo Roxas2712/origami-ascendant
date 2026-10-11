@@ -1,0 +1,11 @@
+Shared Ascendant startup animation source
+
+The IntroScene/VoxelBall source and authored atlas/logo/chime set are reused
+from the existing shared Ascendant startup, reviewed in
+Recompile/output/origami-trailer-v6-20261001/intro-host/mod.
+No bitmap or audio generation is performed by the game.
+ASSET-SHA256.json identifies the required packaging inputs.
+Supply that existing assets directory via tools/build_release.py
+--startup-assets when the local staged copy is unavailable.
+The ghost voice is packaged separately from the user-selected original Boo
+laugh. Its provenance and checksum are in gen3/integrated/haunted_voice/SOURCE.json.

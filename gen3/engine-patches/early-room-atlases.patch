@@ -1,0 +1,90 @@
+--- a/src/core/game3/palette.lua
++++ b/src/core/game3/palette.lua
+@@ -30,15 +30,39 @@
+       parts[#parts + 1] = string.format("%04x", (colors[c] or 0) % 65536)
+     end
+   end
+-  if extraBlob and type(extraBlob) == "string" then
+-    parts[#parts + 1] = extraBlob
++  -- Keep the legacy double-precision recurrence and its rounding exactly.
++  -- Reading a byte group amortizes VM/C calls; do not replace this with FNV
++  -- integer arithmetic, which would change existing on-disk atlas keys.
++  local h = 2166136261
++  local function feed(s)
++    local i, n = 1, #s
++    while i + 15 <= n do
++      local a,b,c,d,e,f,g,j,k,l,m,o,p,q,r,t = s:byte(i, i + 15)
++      h = (h * 16777619 + a) % 4294967296
++      h = (h * 16777619 + b) % 4294967296
++      h = (h * 16777619 + c) % 4294967296
++      h = (h * 16777619 + d) % 4294967296
++      h = (h * 16777619 + e) % 4294967296
++      h = (h * 16777619 + f) % 4294967296
++      h = (h * 16777619 + g) % 4294967296
++      h = (h * 16777619 + j) % 4294967296
++      h = (h * 16777619 + k) % 4294967296
++      h = (h * 16777619 + l) % 4294967296
++      h = (h * 16777619 + m) % 4294967296
++      h = (h * 16777619 + o) % 4294967296
++      h = (h * 16777619 + p) % 4294967296
++      h = (h * 16777619 + q) % 4294967296
++      h = (h * 16777619 + r) % 4294967296
++      h = (h * 16777619 + t) % 4294967296
++      i = i + 16
++    end
++    while i <= n do
++      h = (h * 16777619 + s:byte(i)) % 4294967296
++      i = i + 1
++    end
+   end
+-  -- FNV-1a 32-bit over hex stream (stable, no bit lib).
+-  local h = 2166136261
+-  local s = table.concat(parts)
+-  for i = 1, #s do
+-    h = (h * 16777619 + s:byte(i)) % 4294967296
+-  end
++  feed(table.concat(parts))
++  if type(extraBlob) == "string" then feed(extraBlob) end
+   return string.format("%08x", h)
+ end
+ 
+--- a/src/core/game3/tileset_native.lua
++++ b/src/core/game3/tileset_native.lua
+@@ -151,6 +151,24 @@
+   return ts
+ end
+ 
++-- Explicit loading-phase preparation. Use the same cache and animation binding
++-- as the eventual map; never change the current map or request unrelated pairs.
++function NativeTileset.prepareMaps(maps, ids)
++  local seen, count = {}, 0
++  for _, id in ipairs(ids or {}) do
++    local def = maps and maps[id]
++    local pair = def and def.pair
++    if type(pair) == "string" and not seen[pair] then
++      seen[pair] = true
++      if NativeTileset.ready(pair) then
++        local ok, atlas = pcall(NativeTileset.get, pair)
++        if ok and atlas then count = count + 1 end
++      end
++    end
++  end
++  return count
++end
++
+ function NativeTileset.ready(pair)
+   if not Versions.NATIVE_RENDER then return false end
+   if not pair then return false end
+--- a/src/core/Game3.lua
++++ b/src/core/Game3.lua
+@@ -200,6 +200,10 @@
+   -- Use the saved cartridge sound mode without mutating session state.
+   if activeVersion == "firered" then
+     Audio.prepareCommonSe({ mono = (tonumber(Options.block(options).sound) or 0) == 0 })
++    require("src.core.game3.tileset_native").prepareMaps(self.data.maps, {
++      "FR_PLAYERS_HOUSE_1F", "FR_PLAYERS_HOUSE_2F", "FR_OAKS_LAB",
++      "FR_VIRIDIAN_CITY_MART", "FR_VIRIDIAN_CITY_POKEMON_CENTER_1F",
++    })
+   end
+ 
+   self:_exposeModData()

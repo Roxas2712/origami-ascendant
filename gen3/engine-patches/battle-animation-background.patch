@@ -1,0 +1,16 @@
+--- a/src/core/game3/battle/anim_vm.lua
++++ b/src/core/game3/battle/anim_vm.lua
+@@ -712,10 +712,12 @@
+   end
+ end
+
++AnimVm.drawBackground = draw_anim_bg
++
+ function AnimVm:draw(minZ, maxZ)
+   if not (love and love.graphics) then return end
+
+-  if (minZ or 0) <= 0 then draw_anim_bg(self) end
++  if (minZ or 0) <= 0 then self:drawBackground() end
+
+   if AnimTasks and AnimTasks.draw then
+     AnimTasks.draw(minZ, maxZ, self)

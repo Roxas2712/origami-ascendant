@@ -1,0 +1,9 @@
+{
+  "source": "https://www.youtube.com/watch?v=CUGvfOwo0ns",
+  "title": "Super Mario 64 (N64) - Boo's laugh Sound Effect (HD)",
+  "uploader": "Gaming Sounds & Movie FX",
+  "original_game": "Super Mario 64 / Nintendo",
+  "processing": "Trim leading/trailing silence, mono PCM 44100 Hz, gain 1.45 with peak limiter .95; no pitch change or loop",
+  "asset": "assets/boo-laugh.wav",
+  "sha256": "f34d31d474c92e881d144861691685eb9b54a0572ae6a294e8f3e061bf0ab2f1"
+}

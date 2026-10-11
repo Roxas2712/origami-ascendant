@@ -1,0 +1,21 @@
+--- a/src/core/game3/scripting/natives_events.lua
++++ b/src/core/game3/scripting/natives_events.lua
+@@ -149,7 +149,8 @@
+       setResult(ctx, 0)
+       return false
+     end
+-    foe.wildScripted = true
++    -- Rock Smash uses the ordinary wild entry point in Emerald and FireRed.
++    -- A script invokes it, but it must still inherit Safari mode.
+     setResult(ctx, 1)
+     local Natives = require("src.core.game3.scripting.natives")
+     return Natives.yieldHost(ctx, adapters, function(done)
+@@ -157,7 +158,7 @@
+         local code = Natives.outcome_to_code(result)
+         if ctx then ctx.lastBattleOutcome = code end
+         done()
+-      end, { wildScripted = true })
++      end)
+     end)
+   end,
+   -- pokefirered/src/save_location.c:105

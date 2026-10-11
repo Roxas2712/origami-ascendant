@@ -1,0 +1,5 @@
+ORIGAMI ASCENDANT 1.0.0
+
+Tested with gen1recomp 0.3.75 / LOVE 12. Import through the mod manager and restart. No manual engine patch is needed for normal supported battles on the tested engine.
+
+Bundled engine patches and compatibility metadata are historical references for their stated engine revisions. Do not apply them blindly to a different engine. Cache reuse depends on the engine, edition and geometry options; incompatible entries fall back to live builds.

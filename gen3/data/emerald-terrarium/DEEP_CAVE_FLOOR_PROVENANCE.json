@@ -1,0 +1,11 @@
+{
+  "tool": "builtin image_gen",
+  "prompts": {
+    "deepcave-water-floor": "Use case: stylized-concept. Square 1254x1254 opaque full bleed flat game floor texture, top-down orthographic, seamless-looking deep ocean cavern water made from many thin overlapping cut-paper ripple shapes. Rich dark cobalt-blue and teal, small sinuous cyan highlights, sparse cream-white foam strokes only near edges. The surface must read immediately as flowing water, not rocks or scales or crystals. Fine tactile paper grain, beautifully layered paper cutouts, gentle flat lighting, no transparency, no background, no objects, no land, no islands, no lettering, no horizon, no perspective.",
+    "deepcave-ochre-floor": "Use case: stylized-concept. Square 1254x1254 opaque full bleed flat game floor texture, top-down orthographic, dry golden ochre limestone cave floor assembled from fine overlapping matte paper sheets. Small irregular cracked slabs, sandy seams and tiny fine grains, subtle warm beige and golden variations. Flat subdued lighting, no cast shadows, no relief chunks, no vegetation, no objects, no grid tiles, no symbols, no transparency, no background, no perspective, no horizon. Detailed handcrafted papercraft matching a golden waterfall grotto, readable quiet standing surface."
+  },
+  "sources": {
+    "deepcave-water-floor": "exec-7011f4c5-8c0f-48a1-9a6d-fe09de3b150d.png",
+    "deepcave-ochre-floor": "exec-9bc94e61-bd3d-4984-aa30-0f876d0d271d.png"
+  }
+}

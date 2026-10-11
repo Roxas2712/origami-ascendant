@@ -1,0 +1,48 @@
+--- a/src/core/game3/audio.lua
++++ b/src/core/game3/audio.lua
+@@ -889,7 +889,10 @@
+       warn_once("selen:" .. tostring(id),
+         "SE " .. tostring(id) .. " hit the " .. tostring(maxSec) .. "s bake ceiling")
+     end
+-    if memoable then Audio._seRawPut(id, loop and true or false, rawL, rawR, loopStart) end
++    if memoable then
++      Audio._seRawPut(id, loop and true or false, rawL, rawR, loopStart)
++      hit = Audio._seRaw and Audio._seRaw[id]
++    end
+   end
+ 
+   local pan = Audio.normalizePan(opts.pan)
+@@ -898,7 +901,7 @@
+   if loop and loopStart and love and love.audio and love.audio.newQueueableSource then
+     src, body = Audio._newIntroLoopSource(rawL, rawR, loopStart, master, pan, Audio._mono)
+   end
+-  local sd = not src and Audio._buildSeSoundData(rawL, rawR, master, pan, Audio._mono)
++  local sd = not src and Audio._preparedSeSoundData(hit, rawL, rawR, master, pan, Audio._mono)
+   if sd and love and love.audio and love.audio.newSource then
+     src = love.audio.newSource(sd, "static")
+     if loop then
+@@ -954,6 +957,24 @@
+   if pan < -64 then pan = -64 end
+   local panN = pan / 64
+   return 1 - math.max(0, panN), 1 - math.max(0, -panN)
++end
++
++-- Keep one PCM variant per raw-cache entry. The raw-frame LRU bounds this to
++-- at most SE_RAW_MAX_FRAMES * 4 bytes (stereo 16-bit); option changes replace
++-- the variant instead of growing an unbounded pan/volume cache. Install and
++-- endSession clear the owning raw cache. Sources remain independent per play.
++function Audio._preparedSeSoundData(entry, L, R, master, pan, mono)
++  mono = mono and true or false
++  local pcm = entry and entry.pcm
++  if pcm and pcm.master == master and pcm.pan == pan and pcm.mono == mono
++    and pcm.rate == Mix.SAMPLE_RATE then
++    return pcm.data
++  end
++  local data = Audio._buildSeSoundData(L, R, master, pan, mono)
++  if entry and data then
++    entry.pcm = { data = data, master = master, pan = pan, mono = mono, rate = Mix.SAMPLE_RATE }
++  end
++  return data
+ end
+ 
+ function Audio._buildSeSoundData(L, R, master, pan, mono)

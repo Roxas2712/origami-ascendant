@@ -1,0 +1,9 @@
+ORIGAMI ASCENDANT 1.0.0
+
+FireRed / LeafGreen / Emerald
+
+Import Origami-Ascendant-1.0.0.zip through the gen1recomp mod manager, enable it and restart the application completely. Your own supported ROM is required. No ROMs or saved games are included.
+
+O / F3: settings. V: camera angle. C: cycle field zoom. Mouse wheel or + / -: zoom step. Controller: L + D-pad up / down. Smartphone: pinch / spread two fingers on free world space. Z remains native confirm. F6 / 5: supported battle view.
+
+See README.md for installation, controls, validation and known issues.

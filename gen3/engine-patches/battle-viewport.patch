@@ -1,0 +1,19 @@
+diff --git a/src/core/game3/battle/ui.lua b/src/core/game3/battle/ui.lua
+index 0674f23..69f736d 100644
+--- a/src/core/game3/battle/ui.lua
++++ b/src/core/game3/battle/ui.lua
+@@ -73,2 +73,3 @@ Ui._partnerAction = nil
+ Ui.presentationApiVersion = 2
++Ui.presentationHudVersion = 1
+ Ui.presentation = nil
+@@ -2591,2 +2592,6 @@ function Ui.draw(w, h)
+   if screenFxActive then Anim.endScreenEffect() end
++  -- Optional output surface only. The presentation owner restores it at
++  -- endHud; battle clocks, menus and commands remain native.
++  local hudPresentation = Ui.presentation
++  if hudPresentation and hudPresentation.beginHud then hudPresentation.beginHud() end
+   if dbl then
+@@ -2662,2 +2667,3 @@ function Ui.draw(w, h)
+   love.graphics.setColor(1, 1, 1, 1)
++  if hudPresentation and hudPresentation.endHud then hudPresentation.endHud() end
+ end

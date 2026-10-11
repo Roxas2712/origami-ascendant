@@ -1,0 +1,122 @@
+--- a/src/core/game3/audio.lua
++++ b/src/core/game3/audio.lua
+@@ -835,24 +835,8 @@
+   end
+ end
+ 
+-function Audio.playSe(id, opts)
+-  opts = opts or {}
+-  id = SE.resolve(id)
+-  if id == nil then
+-    return false
+-  end
+-  if opts.fanfare or (Audio.songInfo(id) and Audio.songInfo(id).kind == "fanfare") then
+-    return Audio.playFanfare(id)
+-  end
+-  if not Audio.isReady() then
+-    log(string.format("playse id=%s (no pack)", tostring(id)))
+-    return true
+-  end
+-  local info = Audio.songInfo(id) or {}
+-  -- pret m4aSongNumStart: starting a song on a player replaces that player's song.
+-  local mplay = tonumber(info.player) or 1
+-  Audio._stopSePlayer(mplay)
+-
++-- Resolve waveform data without touching sources, ducking or wait callbacks.
++function Audio._loadSeWaveform(id, opts)
+   local memoable = opts.loop == nil and opts.maxSec == nil
+   local hit = memoable and Audio._seRawGet(id) or nil
+   local loop, rawL, rawR, loopStart
+@@ -864,7 +848,7 @@
+     local ok = Player.start(Audio._pack, Audio._cache, slot, id, { forceSeq = true })
+     if not ok then
+       warn_once("se:" .. tostring(id), "SE " .. tostring(id) .. " missing")
+-      return false
++      return nil
+     end
+ 
+     loop = opts.loop
+@@ -894,6 +878,69 @@
+       hit = Audio._seRaw and Audio._seRaw[id]
+     end
+   end
++
++  return hit or { loop = loop, rawL = rawL, rawR = rawR, loopStart = loopStart }, hit
++end
++
++-- Call only during explicit game loading, never from update/map transitions.
++-- Preparation is bounded by the existing raw LRU and does not start any source.
++function Audio.prepareSe(ids, opts)
++  opts = opts or {}
++  local count = 0
++  if not Audio.isReady() then return count end
++  for _, name in ipairs(ids or {}) do
++    local id = SE.resolve(name)
++    local info = id and Audio.songInfo(id)
++    if info and info.kind ~= "fanfare" then
++      local ok, prepared = pcall(function()
++        local wave, entry = Audio._loadSeWaveform(id, {})
++        if not (wave and entry) then return false end
++        if not wave.loopStart then
++          Audio._preparedSeSoundData(entry, wave.rawL, wave.rawR,
++            Audio._sfxVolume or 1, 0, opts.mono == nil and Audio._mono or opts.mono)
++        end
++        return true
++      end)
++      if ok and prepared then
++        count = count + 1
++      elseif not ok then
++        -- An optional warmup must not turn a missing/bad SE into a boot failure.
++        warn_once("seprepare:" .. tostring(id), "SE preparation skipped: " .. tostring(id))
++      end
++    end
++  end
++  return count
++end
++
++function Audio.prepareCommonSe(opts)
++  return Audio.prepareSe({
++    "SE_DOOR", "SE_SLIDING_DOOR", "SE_EXIT", "SE_SELECT", "SE_WALL_HIT", "SE_LEDGE",
++    "SE_BALL_OPEN", "SE_BALL_THROW", "SE_FAINT", "SE_FLEE",
++    "SE_NOT_EFFECTIVE", "SE_EFFECTIVE", "SE_SUPER_EFFECTIVE", "SE_LOW_HEALTH",
++  }, opts)
++end
++
++function Audio.playSe(id, opts)
++  opts = opts or {}
++  id = SE.resolve(id)
++  if id == nil then
++    return false
++  end
++  if opts.fanfare or (Audio.songInfo(id) and Audio.songInfo(id).kind == "fanfare") then
++    return Audio.playFanfare(id)
++  end
++  if not Audio.isReady() then
++    log(string.format("playse id=%s (no pack)", tostring(id)))
++    return true
++  end
++  local info = Audio.songInfo(id) or {}
++  -- pret m4aSongNumStart: starting a song on a player replaces that player's song.
++  local mplay = tonumber(info.player) or 1
++  Audio._stopSePlayer(mplay)
++
++  local wave, hit = Audio._loadSeWaveform(id, opts)
++  if not wave then return false end
++  local loop, rawL, rawR, loopStart = wave.loop, wave.rawL, wave.rawR, wave.loopStart
+ 
+   local pan = Audio.normalizePan(opts.pan)
+   local master = (Audio._sfxVolume or 1) * (opts.volume or 1)
+--- a/src/core/Game3.lua
++++ b/src/core/Game3.lua
+@@ -196,6 +196,11 @@
+     or (SaveData.defaultOptions and SaveData.defaultOptions())
+   self.options = options
+   self:applyOptions(options)
++  -- Do native SE synthesis before boot/UI or field callbacks become interactive.
++  -- Use the saved cartridge sound mode without mutating session state.
++  if activeVersion == "firered" then
++    Audio.prepareCommonSe({ mono = (tonumber(Options.block(options).sound) or 0) == 0 })
++  end
+ 
+   self:_exposeModData()
+   self:_loadMods(opts)

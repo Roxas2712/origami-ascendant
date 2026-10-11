@@ -1,0 +1,26 @@
+-- Native Lavaridge cutouts. Each four hex digits encode one 16-pixel row.
+-- Hole masks cover only the original olive centre, not its brick floor/rim.
+return {
+ [0x215]="03c00ff03ffc7ffeffffffffffffffffffffffffffffffffffffffffffffffff",
+ [0x217]="03c00ff03ffc7ffeffffffffffffffffffffffffffffffffffffffffffffffff",
+ [0x21f]="ffffffffffffffffffffffffffffffffffffffffffffffffffffffff7ffe3ffc",
+ [0x218]="00000000ffe0fff0fff8fffcfffeffffffffffffffffffffffffffffffffffff",
+ [0x219]="00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+ [0x21a]="00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+ [0x21b]="00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+ [0x21c]="0000000007ff0bff13ff63ffc3ffc3ffc3ffc3ffc3ffc3ffc3ffc3ffc3ffc3ff",
+ [0x220]="ffffffffffffffffffffffffffffffffffdf002f0017000b0007000ffffefffc",
+ [0x221]="ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+ [0x222]="ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+ [0x223]="ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+ [0x224]="c3ffc3ffc3ffc3ffc3ffc3ffc3ffc3ffc3ffc000c000c000e000f0007fff3fff",
+ [0x212]="00000000000007e01ff83ffc7ffe7ffe7ffe7ffe3ffc3ffc1ff807e000000000",
+ [0x213]="00000000000007e01ff83ffc7ffe7ffe7ffe7ffe3ffc3ffc1ff807e000000000",
+ [0x21d]="00000000000007e01ff83ffc7ffe7ffe7ffe7ffe3ffc3ffc1ff807e000000000",
+ [0x227]="00000000000007e01ff83ffc7ffe7ffe7ffe7ffe3ffc3ffc1ff807e000000000",
+ [0x238]="00000000000007e01ff83ffc7ffe7ffe7ffe7ffe3ffc3ffc1ff807e000000000",
+ [0x239]="00000000000007e01ff83ffc7ffe7ffe7ffe7ffe3ffc3ffc1ff807e000000000",
+ [0x23a]="00000000000007e01ff83ffc7ffe7ffe7ffe7ffe3ffc3ffc1ff807e000000000",
+ [0x23b]="00000000000007e01ff83ffc7ffe7ffe7ffe7ffe3ffc3ffc1ff807e000000000",
+ [0x23c]="00000000000007e01ff83ffc7ffe7ffe7ffe7ffe3ffc3ffc1ff807e000000000",
+}

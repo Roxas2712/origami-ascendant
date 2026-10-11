@@ -1,0 +1,5 @@
+{
+  "source": "Existing authored VASC LoadingCompanion.lua",
+  "source_sha256": "917d3b133c39548ea087ddbf34692adb75b5fe348267f432c6cb91d083125e67",
+  "adaptation": "Original procedural Pikachu/Eevee and rotating Pokeball art; Gen3 readiness and final-composite adapter. No external bitmap or sound inputs."
+}

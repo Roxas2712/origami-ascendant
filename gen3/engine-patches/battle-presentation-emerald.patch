@@ -1,0 +1,115 @@
+diff --git a/src/core/game3/battle/ui.lua b/src/core/game3/battle/ui.lua
+--- a/src/core/game3/battle/ui.lua
++++ b/src/core/game3/battle/ui.lua
+@@ -68,6 +68,10 @@
+ Ui._bounce = { hb = {}, mon = {} }
+ Ui._preview = nil
+ Ui._partnerAction = nil
++-- Optional presentation-only adapter. Nil preserves native rendering.
++-- Rules/state never consume it; the mod binds an exact battle.
++Ui.presentationApiVersion = 2
++Ui.presentation = nil
+ 
+ -- pokefirered/src/battle_script_commands.c:5149
+ local BATTLE_YESNO = { left = 24, top = 9, style = "battle" }
+@@ -126,6 +130,11 @@
+ end
+ 
+ local function battler_sprite_center(side, species, base, form, ghost)
++  local presentation = Ui.presentation
++  if presentation and presentation.center then
++    local x, y = presentation.center(side, species, form, ghost)
++    if x ~= nil then return x, y end
++  end
+   if type(side) == "number" then
+     local id = side
+     side = (id % 2 == 0) and "player" or "enemy"
+@@ -1912,6 +1921,7 @@
+ --- Draw mon pic at GetBattlerSpriteFinal_Y center (64×64 → TL = center−32).
+ -- Applies Anim present offsets / alpha / visibility / z (Dig/Fly hide).
+ local function draw_mon_sprite(battler, base, back, id)
++  if Ui.presentation and Ui.presentation.drawBattler and Ui.presentation.drawBattler(back and "player" or "enemy", battler) then return end
+   if not battler then return end
+   local side = back and "player" or "enemy"
+   local key = id or side
+@@ -1955,12 +1965,14 @@
+   end
+   local picSp, shiny, personality = pic_args(battler, sp)
+   if not entry and back and Pokemon.backPic then
+-    entry = Pokemon.backPic(picSp, form, shiny)
++    if Ui.presentation and Ui.presentation.frontSprites then
++      entry = Pokemon.frontPic(picSp, form, shiny, personality)
++    else entry = Pokemon.backPic(picSp, form, shiny) end
+   end
+   if not entry then
+     entry = Pokemon.frontPic and Pokemon.frontPic(picSp, form, shiny, personality)
+   end
+-  if not back and not ghost and not dollImg and pres and (tonumber(pres.monFrame) or 0) ~= 0 then
++  if (not back or (Ui.presentation and Ui.presentation.frontSprites)) and not ghost and not dollImg and pres and (tonumber(pres.monFrame) or 0) ~= 0 then
+     -- pokeemerald/src/sprite.c:917
+     entry = require("src.core.game3.mon_anim").framePic(picSp, pres.monFrame, shiny) or entry
+   end
+@@ -1974,9 +1986,15 @@
+       love.graphics.setColor(shade, shade, shade, a)
+     end
+     local hFlip = (pres and pres.hFlip) and true or false
++    if Ui.presentation and Ui.presentation.frontSprites and back and not dollImg then hFlip = not hFlip end
++    if Ui.presentation and Ui.presentation.scale then scale = scale * Ui.presentation.scale(side, sp, form) end
+     local sx = (hFlip and -1 or 1) * scale * ((pres and pres.sx) or 1)
+     local sy = scale * ((pres and pres.sy) or 1)
+     local rot = (pres and pres.rotation) or 0
++    if Ui.presentation and Ui.presentation.poseCenter then
++      local x, y = Ui.presentation.poseCenter(back and "player" or "enemy", entry.image, cx, cy, rot, sx, sy, pres, battler)
++      if x ~= nil then cx, cy = x, y end
++    end
+     local blended
+     if id then
+       blended = BallOpen.setBlendShader(BallOpen.monBlend(id))
+@@ -2270,6 +2288,7 @@
+ 
+ 
+ local function draw_enemy_trainer(stage)
++  if Ui.presentation and Ui.presentation.drawTrainer and Ui.presentation.drawTrainer("enemy", stage) then return end
+   if not stage or not stage.trainer then return end
+   local TrainerPic = require("src.core.game3.trainer_pic")
+   local te = stage.trainer.enemy
+@@ -2290,6 +2309,7 @@
+ end
+ 
+ local function draw_player_trainer(stage)
++  if Ui.presentation and Ui.presentation.drawTrainer and Ui.presentation.drawTrainer("player", stage) then return end
+   if not stage or not stage.trainer then return end
+   local TrainerPic = require("src.core.game3.trainer_pic")
+   local tp = stage.trainer.player
+@@ -2364,6 +2384,11 @@
+   if not ball or not ball.visible then return end
+   local bx = (ball.x or 0) + (ball.ox or 0)
+   local by = (ball.y or 0) + (ball.oy or 0)
++  local ballScale = tonumber(ball.scale) or 1
++  if Ui.presentation and Ui.presentation.ballPosition then
++    local x, y, scale = Ui.presentation.ballPosition(ball)
++    if x ~= nil then bx, by, ballScale = x, y, scale or 1 end
++  end
+   local rot = tonumber(ball.rot) or 0
+   local frame = math.max(0, math.min(2, tonumber(ball.frame) or 0))
+   local darken = tonumber(ball.darken) or 0
+@@ -2381,7 +2406,7 @@
+   if img then
+     local blend = ball.blend
+     local blended = blend and BallOpen.setBlendShader(blend.coeff, blend.r, blend.g, blend.b)
+-    love.graphics.draw(img, quad, bx, by, rot, 1, 1, 8, 8)
++    love.graphics.draw(img, quad, bx, by, rot, ballScale, ballScale, 8, 8)
+     if blended then love.graphics.setShader() end
+   end
+ 
+@@ -2468,6 +2493,10 @@
+     BattleChrome.drawPartyBar(pos.x, pos.y, player.balls, player.ox, false)
+   end
+ end
++
++-- Expose the native animated sprite pass for presentation-only captures.
++Ui.drawBattler = draw_mon_sprite
++Ui.drawBall = draw_ball_entry
+ 
+ function Ui.draw(w, h)
+   if not (love and love.graphics) then return end

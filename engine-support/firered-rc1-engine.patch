@@ -1,0 +1,956 @@
+--- /dev/null
++++ b/src/core/ByteHash.lua
+@@ -0,0 +1,36 @@
++-- Engine-owned SHA-256 for byte strings; never exposes FFI to mods.
++-- macOS system crypto is optional; all other platforms retain LÖVE's hash.
++local M={};local initialized,systemHash,backend=false,nil,'love'
++local function initialize()
++ if initialized then return end;initialized=true
++ if love.system.getOS()~='OS X'then return end
++ local ok,fn=pcall(function()
++  local ffi=require('ffi')
++  ffi.cdef('unsigned char *CC_SHA256(const void *data, unsigned int len, unsigned char *md);')
++  local crypto=ffi.load('/usr/lib/system/libcommonCrypto.dylib')
++  local buffer=ffi.new('unsigned char[32]')
++  local function digest(raw)
++   assert(crypto.CC_SHA256(raw,#raw,buffer)~=nil,'system SHA-256 failed')
++   return ffi.string(buffer,32)
++  end
++  -- Check the actual backend, including empty input and a multi-block binary
++  -- value, before allowing it to validate any cached geometry or source file.
++  for _,raw in ipairs{'','abc',string.rep('\0\255\128',67)}do
++   assert(digest(raw)==love.data.hash('sha256',raw),'system SHA-256 self-test')
++  end
++  return digest
++ end)
++ if ok then systemHash=fn;backend='macos-commoncrypto'end
++end
++function M.sha256(raw)
++ assert(type(raw)=='string','cache hash expects byte string')
++ initialize()
++ local digest
++ if systemHash and #raw<=4294967295 then
++  local ok,result=pcall(systemHash,raw)
++  if ok then digest=result else systemHash=nil;backend='love'end
++ end
++ return love.data.encode('string','hex',digest or love.data.hash('sha256',raw))
++end
++function M.backend()initialize();return backend end
++return M
+--- a/src/core/Game3.lua
++++ b/src/core/Game3.lua
+@@ -124,6 +124,14 @@
+ 
+ function Game3:load(opts)
+   local activeVersion = require("src.core.GameVersion").get()
++  -- The bundled macOS ARM64 runtime starts in interpreter mode. Enable its
++  -- supported compiler for FireRed; preserve the caller's mode on reset.
++  if activeVersion == "firered" and jit and jit.os == "OSX" and jit.arch == "arm64"
++    and not jit.status() and os.getenv("POKEPORT_FR_JIT") ~= "0" then
++    local ok = pcall(jit.on)
++    self._frEnabledJit = ok and jit.status() or nil
++    print("[game3] FireRed JIT", self._frEnabledJit and "enabled" or "unavailable")
++  end
+   require("src.import.gba.versions").select(activeVersion)
+   require("src.core.game3.se_ids").select(activeVersion)
+   require("src.core.game3.song_ids").select(activeVersion)
+@@ -196,6 +204,15 @@
+     or (SaveData.defaultOptions and SaveData.defaultOptions())
+   self.options = options
+   self:applyOptions(options)
++  -- Do native SE synthesis before boot/UI or field callbacks become interactive.
++  -- Use the saved cartridge sound mode without mutating session state.
++  if activeVersion == "firered" then
++    require("src.core.game3.battle_loading").prepare(Audio, { mono = (tonumber(Options.block(options).sound) or 0) == 0 })
++    require("src.core.game3.tileset_native").prepareMaps(self.data.maps, {
++      "FR_PLAYERS_HOUSE_1F", "FR_PLAYERS_HOUSE_2F", "FR_OAKS_LAB",
++      "FR_VIRIDIAN_CITY_MART", "FR_VIRIDIAN_CITY_POKEMON_CENTER_1F",
++    })
++  end
+ 
+   self:_exposeModData()
+   self:_loadMods(opts)
+@@ -1293,6 +1310,7 @@
+ end
+ 
+ function Game3:reset()
++  if self._frEnabledJit then pcall(jit.off); self._frEnabledJit = nil end
+   self.questPlayback = nil
+   Help.reset()
+   Audio.endSession()
+--- a/src/core/game3/audio.lua
++++ b/src/core/game3/audio.lua
+@@ -800,6 +800,7 @@
+ Audio.SE_ONESHOT_MAX_SEC = 30
+ 
+ function Audio._seRawClear()
++  Audio._seArchive = nil
+   Audio._seRaw = {}
+   Audio._seRawFrames = 0
+   Audio._seRawTick = 0
+@@ -835,26 +836,17 @@
+   end
+ end
+ 
+-function Audio.playSe(id, opts)
+-  opts = opts or {}
+-  id = SE.resolve(id)
+-  if id == nil then
+-    return false
+-  end
+-  if opts.fanfare or (Audio.songInfo(id) and Audio.songInfo(id).kind == "fanfare") then
+-    return Audio.playFanfare(id)
+-  end
+-  if not Audio.isReady() then
+-    log(string.format("playse id=%s (no pack)", tostring(id)))
+-    return true
+-  end
+-  local info = Audio.songInfo(id) or {}
+-  -- pret m4aSongNumStart: starting a song on a player replaces that player's song.
+-  local mplay = tonumber(info.player) or 1
+-  Audio._stopSePlayer(mplay)
+-
++-- Resolve waveform data without touching sources, ducking or wait callbacks.
++function Audio._loadSeWaveform(id, opts)
+   local memoable = opts.loop == nil and opts.maxSec == nil
+   local hit = memoable and Audio._seRawGet(id) or nil
++  if not hit and memoable and Audio._seArchive then
++    local ok,w=pcall(Audio._seArchive.get,Audio._seArchive,id)
++    if ok and w then
++      Audio._seRawPut(id,w.loop,w.rawL,w.rawR,w.loopStart)
++      hit=Audio._seRaw and Audio._seRaw[id]
++    end
++  end
+   local loop, rawL, rawR, loopStart
+   if hit then
+     loop, rawL, rawR, loopStart = hit.loop, hit.rawL, hit.rawR, hit.loopStart
+@@ -864,7 +856,7 @@
+     local ok = Player.start(Audio._pack, Audio._cache, slot, id, { forceSeq = true })
+     if not ok then
+       warn_once("se:" .. tostring(id), "SE " .. tostring(id) .. " missing")
+-      return false
++      return nil
+     end
+ 
+     loop = opts.loop
+@@ -889,8 +881,95 @@
+       warn_once("selen:" .. tostring(id),
+         "SE " .. tostring(id) .. " hit the " .. tostring(maxSec) .. "s bake ceiling")
+     end
+-    if memoable then Audio._seRawPut(id, loop and true or false, rawL, rawR, loopStart) end
+-  end
++    if memoable then
++      if Audio._seArchive then
++        Audio._seArchive:put(id,{loop=loop and true or false,rawL=rawL,rawR=rawR,loopStart=loopStart})
++      end
++      Audio._seRawPut(id, loop and true or false, rawL, rawR, loopStart)
++      hit = Audio._seRaw and Audio._seRaw[id]
++    end
++  end
++
++  return hit or { loop = loop, rawL = rawL, rawR = rawR, loopStart = loopStart }, hit
++end
++
++-- Call only during explicit game loading, never from update/map transitions.
++-- Preparation is bounded by the existing raw LRU and does not start any source.
++function Audio.prepareSe(ids, opts)
++  opts = opts or {}
++  local count = 0
++  if not Audio.isReady() then return count end
++  for _, name in ipairs(ids or {}) do
++    local id = SE.resolve(name)
++    local info = id and Audio.songInfo(id)
++    if info and info.kind ~= "fanfare" then
++      local ok, prepared = pcall(function()
++        local wave, entry = Audio._loadSeWaveform(id, {})
++        if not (wave and entry) then return false end
++        if not wave.loopStart then
++          Audio._preparedSeSoundData(entry, wave.rawL, wave.rawR,
++            Audio._sfxVolume or 1, 0, opts.mono == nil and Audio._mono or opts.mono)
++        end
++        return true
++      end)
++      if ok and prepared then
++        count = count + 1
++      elseif not ok then
++        -- An optional warmup must not turn a missing/bad SE into a boot failure.
++        warn_once("seprepare:" .. tostring(id), "SE preparation skipped: " .. tostring(id))
++      end
++    end
++  end
++  return count
++end
++
++-- Explicit loading only. Keep the existing bounded raw/PCM LRU; compressed
++-- exact doubles retain the full sound set without retaining all Lua sample tables.
++function Audio.prepareAllSe(opts, progress)
++  if not Audio.isReady() then return 0 end
++  local ok,archive=pcall(function()
++    return require('src.core.game3.se_wave_cache').open(Audio._pack,Audio._cache,Mix.SAMPLE_RATE)
++  end)
++  if not(ok and archive)then return Audio.prepareCommonSe(opts)end
++  Audio._seArchive=archive
++  local count=0
++  for i,id in ipairs(archive.ids)do
++    count=count+Audio.prepareSe({id},opts)
++    if progress then progress(i,#archive.ids)end
++  end
++  Audio.prepareCommonSe(opts) -- Keep boot/field/ball/hit sounds hot after the full sweep.
++  return count
++end
++
++function Audio.prepareCommonSe(opts)
++  return Audio.prepareSe({
++    "SE_DOOR", "SE_SLIDING_DOOR", "SE_EXIT", "SE_SELECT", "SE_WALL_HIT", "SE_LEDGE",
++    "SE_BALL_OPEN", "SE_BALL_THROW", "SE_FAINT", "SE_FLEE",
++    "SE_NOT_EFFECTIVE", "SE_EFFECTIVE", "SE_SUPER_EFFECTIVE", "SE_LOW_HEALTH",
++  }, opts)
++end
++
++function Audio.playSe(id, opts)
++  opts = opts or {}
++  id = SE.resolve(id)
++  if id == nil then
++    return false
++  end
++  if opts.fanfare or (Audio.songInfo(id) and Audio.songInfo(id).kind == "fanfare") then
++    return Audio.playFanfare(id)
++  end
++  if not Audio.isReady() then
++    log(string.format("playse id=%s (no pack)", tostring(id)))
++    return true
++  end
++  local info = Audio.songInfo(id) or {}
++  -- pret m4aSongNumStart: starting a song on a player replaces that player's song.
++  local mplay = tonumber(info.player) or 1
++  Audio._stopSePlayer(mplay)
++
++  local wave, hit = Audio._loadSeWaveform(id, opts)
++  if not wave then return false end
++  local loop, rawL, rawR, loopStart = wave.loop, wave.rawL, wave.rawR, wave.loopStart
+ 
+   local pan = Audio.normalizePan(opts.pan)
+   local master = (Audio._sfxVolume or 1) * (opts.volume or 1)
+@@ -898,7 +977,7 @@
+   if loop and loopStart and love and love.audio and love.audio.newQueueableSource then
+     src, body = Audio._newIntroLoopSource(rawL, rawR, loopStart, master, pan, Audio._mono)
+   end
+-  local sd = not src and Audio._buildSeSoundData(rawL, rawR, master, pan, Audio._mono)
++  local sd = not src and Audio._preparedSeSoundData(hit, rawL, rawR, master, pan, Audio._mono)
+   if sd and love and love.audio and love.audio.newSource then
+     src = love.audio.newSource(sd, "static")
+     if loop then
+@@ -954,6 +1033,24 @@
+   if pan < -64 then pan = -64 end
+   local panN = pan / 64
+   return 1 - math.max(0, panN), 1 - math.max(0, -panN)
++end
++
++-- Keep one PCM variant per raw-cache entry. The raw-frame LRU bounds this to
++-- at most SE_RAW_MAX_FRAMES * 4 bytes (stereo 16-bit); option changes replace
++-- the variant instead of growing an unbounded pan/volume cache. Install and
++-- endSession clear the owning raw cache. Sources remain independent per play.
++function Audio._preparedSeSoundData(entry, L, R, master, pan, mono)
++  mono = mono and true or false
++  local pcm = entry and entry.pcm
++  if pcm and pcm.master == master and pcm.pan == pan and pcm.mono == mono
++    and pcm.rate == Mix.SAMPLE_RATE then
++    return pcm.data
++  end
++  local data = Audio._buildSeSoundData(L, R, master, pan, mono)
++  if entry and data then
++    entry.pcm = { data = data, master = master, pan = pan, mono = mono, rate = Mix.SAMPLE_RATE }
++  end
++  return data
+ end
+ 
+ function Audio._buildSeSoundData(L, R, master, pan, mono)
+--- a/src/core/game3/battle/anim_vm.lua
++++ b/src/core/game3/battle/anim_vm.lua
+@@ -712,10 +712,12 @@
+   end
+ end
+ 
++AnimVm.drawBackground = draw_anim_bg
++
+ function AnimVm:draw(minZ, maxZ)
+   if not (love and love.graphics) then return end
+ 
+-  if (minZ or 0) <= 0 then draw_anim_bg(self) end
++  if (minZ or 0) <= 0 then self:drawBackground() end
+ 
+   if AnimTasks and AnimTasks.draw then
+     AnimTasks.draw(minZ, maxZ, self)
+--- a/src/core/game3/battle/init.lua
++++ b/src/core/game3/battle/init.lua
+@@ -515,6 +515,15 @@
+     -- pokeemerald/src/battle_tower.c:2124
+     playerHalf = (double and opts.partner and not multi) and opts.playerHalf or nil,
+   })
++  -- Copy only primitive presentation data; never use it for terrain mechanics.
++  if type(opts.encounterContext) == "table" then
++    local c = opts.encounterContext
++    st.encounterContext = {
++      source = type(c.source) == "string" and c.source or nil,
++      mapId = type(c.mapId) == "string" and c.mapId or nil,
++      x = tonumber(c.x), y = tonumber(c.y), terrain = tonumber(c.terrain),
++    }
++  end
+   if st.multi then
+     -- pokefirered/src/battle_controllers.c:223
+     st.linkOwn = tonumber(multi.own)
+--- a/src/core/game3/battle/ui.lua
++++ b/src/core/game3/battle/ui.lua
+@@ -68,6 +68,12 @@
+ Ui._bounce = { hb = {}, mon = {} }
+ Ui._preview = nil
+ Ui._partnerAction = nil
++-- Optional presentation-only adapter. Nil preserves native rendering.
++-- Rules/state never consume it; the mod binds an exact battle.
++Ui.presentationApiVersion = 2
++Ui.presentationHudVersion = 1
++Ui.presentationSlotsVersion = 1
++Ui.presentation = nil
+ 
+ -- pokefirered/src/battle_script_commands.c:5149
+ local BATTLE_YESNO = { left = 24, top = 9, style = "battle" }
+@@ -126,6 +132,11 @@
+ end
+ 
+ local function battler_sprite_center(side, species, base, form, ghost)
++  local presentation = Ui.presentation
++  if presentation and presentation.center then
++    local x, y = presentation.center(side, species, form, ghost)
++    if x ~= nil then return x, y end
++  end
+   if type(side) == "number" then
+     local id = side
+     side = (id % 2 == 0) and "player" or "enemy"
+@@ -1912,6 +1923,7 @@
+ --- Draw mon pic at GetBattlerSpriteFinal_Y center (64×64 → TL = center−32).
+ -- Applies Anim present offsets / alpha / visibility / z (Dig/Fly hide).
+ local function draw_mon_sprite(battler, base, back, id)
++  if Ui.presentation and Ui.presentation.drawBattler and Ui.presentation.drawBattler(back and "player" or "enemy", battler, id) then return end
+   if not battler then return end
+   local side = back and "player" or "enemy"
+   local key = id or side
+@@ -1955,12 +1967,14 @@
+   end
+   local picSp, shiny, personality = pic_args(battler, sp)
+   if not entry and back and Pokemon.backPic then
+-    entry = Pokemon.backPic(picSp, form, shiny)
++    if Ui.presentation and Ui.presentation.frontSprites then
++      entry = Pokemon.frontPic(picSp, form, shiny, personality)
++    else entry = Pokemon.backPic(picSp, form, shiny) end
+   end
+   if not entry then
+     entry = Pokemon.frontPic and Pokemon.frontPic(picSp, form, shiny, personality)
+   end
+-  if not back and not ghost and not dollImg and pres and (tonumber(pres.monFrame) or 0) ~= 0 then
++  if (not back or (Ui.presentation and Ui.presentation.frontSprites)) and not ghost and not dollImg and pres and (tonumber(pres.monFrame) or 0) ~= 0 then
+     -- pokeemerald/src/sprite.c:917
+     entry = require("src.core.game3.mon_anim").framePic(picSp, pres.monFrame, shiny) or entry
+   end
+@@ -1974,9 +1988,15 @@
+       love.graphics.setColor(shade, shade, shade, a)
+     end
+     local hFlip = (pres and pres.hFlip) and true or false
++    if Ui.presentation and Ui.presentation.frontSprites and back and not dollImg then hFlip = not hFlip end
++    if Ui.presentation and Ui.presentation.scale then scale = scale * Ui.presentation.scale(side, sp, form, id) end
+     local sx = (hFlip and -1 or 1) * scale * ((pres and pres.sx) or 1)
+     local sy = scale * ((pres and pres.sy) or 1)
+     local rot = (pres and pres.rotation) or 0
++    if Ui.presentation and Ui.presentation.poseCenter then
++      local x, y = Ui.presentation.poseCenter(back and "player" or "enemy", entry.image, cx, cy, rot, sx, sy, pres, battler, id)
++      if x ~= nil then cx, cy = x, y end
++    end
+     local blended
+     if id then
+       blended = BallOpen.setBlendShader(BallOpen.monBlend(id))
+@@ -2270,6 +2290,7 @@
+ 
+ 
+ local function draw_enemy_trainer(stage)
++  if Ui.presentation and Ui.presentation.drawTrainer and Ui.presentation.drawTrainer("enemy", stage) then return end
+   if not stage or not stage.trainer then return end
+   local TrainerPic = require("src.core.game3.trainer_pic")
+   local te = stage.trainer.enemy
+@@ -2290,6 +2311,7 @@
+ end
+ 
+ local function draw_player_trainer(stage)
++  if Ui.presentation and Ui.presentation.drawTrainer and Ui.presentation.drawTrainer("player", stage) then return end
+   if not stage or not stage.trainer then return end
+   local TrainerPic = require("src.core.game3.trainer_pic")
+   local tp = stage.trainer.player
+@@ -2364,6 +2386,11 @@
+   if not ball or not ball.visible then return end
+   local bx = (ball.x or 0) + (ball.ox or 0)
+   local by = (ball.y or 0) + (ball.oy or 0)
++  local ballScale = tonumber(ball.scale) or 1
++  if Ui.presentation and Ui.presentation.ballPosition then
++    local x, y, scale = Ui.presentation.ballPosition(ball)
++    if x ~= nil then bx, by, ballScale = x, y, scale or 1 end
++  end
+   local rot = tonumber(ball.rot) or 0
+   local frame = math.max(0, math.min(2, tonumber(ball.frame) or 0))
+   local darken = tonumber(ball.darken) or 0
+@@ -2381,7 +2408,7 @@
+   if img then
+     local blend = ball.blend
+     local blended = blend and BallOpen.setBlendShader(blend.coeff, blend.r, blend.g, blend.b)
+-    love.graphics.draw(img, quad, bx, by, rot, 1, 1, 8, 8)
++    love.graphics.draw(img, quad, bx, by, rot, ballScale, ballScale, 8, 8)
+     if blended then love.graphics.setShader() end
+   end
+ 
+@@ -2468,6 +2495,10 @@
+     BattleChrome.drawPartyBar(pos.x, pos.y, player.balls, player.ox, false)
+   end
+ end
++
++-- Expose the native animated sprite pass for presentation-only captures.
++Ui.drawBattler = draw_mon_sprite
++Ui.drawBall = draw_ball_entry
+ 
+ function Ui.draw(w, h)
+   if not (love and love.graphics) then return end
+@@ -2560,6 +2591,10 @@
+   -- pokefirered/src/pokeball.c:770
+   BallOpen.draw()
+   if screenFxActive then Anim.endScreenEffect() end
++  -- Optional output surface only. The presentation owner restores it at
++  -- endHud; battle clocks, menus and commands remain native.
++  local hudPresentation = Ui.presentation
++  if hudPresentation and hudPresentation.beginHud then hudPresentation.beginHud() end
+   if dbl then
+     draw_double_healthboxes(st, Anim)
+   elseif st then
+@@ -2631,6 +2666,7 @@
+   end
+ 
+   love.graphics.setColor(1, 1, 1, 1)
++  if hudPresentation and hudPresentation.endHud then hudPresentation.endHud() end
+ end
+ 
+ function Ui.log()
+--- a/src/core/game3/battle_bridge.lua
++++ b/src/core/game3/battle_bridge.lua
+@@ -521,6 +521,7 @@
+     mapBehavior = mapBehavior,
+     mapBattleScene = mapBattleScene,
+     terrain = opts.terrain,
++    encounterContext = opts.encounterContext, -- optional presentation-only metadata
+     trainerId = opts.trainerId or (foe and foe.trainerId),
+     -- pokefirered/src/trainer_tower.c:735 BATTLE_TYPE_TRAINER_TOWER
+     trainerTower = opts.trainerTower or (foe and foe.trainerTower),
+--- /dev/null
++++ b/src/core/game3/battle_loading.lua
+@@ -0,0 +1,31 @@
++-- Run before the boot menu/field becomes interactive, never at a battle boundary.
++local M={}
++function M.prepare(Audio, opts)
++  local started=love.timer and love.timer.getTime() or 0
++  local last=-math.huge
++  local function progress(i,total)
++    local g=love.graphics
++    if not(g and g.isActive and g.isActive() and love.timer)then return end
++    local now=love.timer.getTime();if now-last<.1 and i~=total then return end;last=now
++    g.push('all');g.setCanvas();g.origin();g.setShader();g.setScissor();g.setDepthMode()
++    g.clear(.055,.08,.10,1);g.setColor(.9,.94,.9,1)
++    local w,h=g.getDimensions()
++    g.printf('Preparing battle effects...',0,h*.45,w,'center')
++    local width=math.min(360,w*.6);g.setColor(.2,.27,.3,1);g.rectangle('fill',(w-width)/2,h*.52,width,8)
++    g.setColor(.65,.82,.65,1);g.rectangle('fill',(w-width)/2,h*.52,width*i/math.max(1,total),8)
++    g.pop();g.present();if love.event then love.event.pump()end
++  end
++  progress(0,1)
++  require('src.core.game3.battle.anim').scriptForMove(1)
++  require('src.core.game3.battle.anim_templates')
++  require('src.core.game3.battle.anim_callbacks')
++  -- These tables are otherwise required from the first particle callback.
++  require('src.core.game3.battle.anim_port.g1_templates')
++  require('src.core.game3.battle.anim_port.g2_templates')
++  local n=Audio.prepareAllSe(opts,progress)
++  local archive=Audio._seArchive
++  print('BATTLE_LOADING_READY',n,archive and archive.hits or 0,archive and archive.misses or 0,
++    archive and archive.bytes or 0,love.timer and (love.timer.getTime()-started)*1000 or 0)
++  return n
++end
++return M
+--- a/src/core/game3/dataset.lua
++++ b/src/core/game3/dataset.lua
+@@ -140,6 +140,7 @@
+     local floorNum = spec.floorNum
+     local weather = spec.weather
+     local mapType = spec.mapType
++    local layoutId = spec.layoutId
+     -- pokefirered/include/global.fieldmap.h:191
+     local cave = spec.cave
+     local allowEscaping = spec.allowEscaping
+@@ -153,7 +154,7 @@
+     if regionMapSectionId == nil or showMapName == nil or cave == nil
+         or allowEscaping == nil or allowRunning == nil or bikingAllowed == nil
+         or battleType == nil or music == nil
+-        or borderWidth == nil or borderHeight == nil then
++        or borderWidth == nil or borderHeight == nil or layoutId == nil then
+       -- Try loading from data/generated/gba/map_tree/maps/{slot}/header.json
+       local cache = loveCache()
+       local candidates = {}
+@@ -185,6 +186,7 @@
+             floorNum = floorNum or h.floorNum
+             weather = weather or h.weather
+             mapType = mapType or h.mapType
++            layoutId = layoutId or h.layoutId
+             cave = cave or h.cave
+             allowEscaping = allowEscaping or h.allowEscaping
+             allowRunning = allowRunning or h.allowRunning
+@@ -233,6 +235,8 @@
+       floorNum = tonumber(floorNum) or 0,
+       weather = weather or 0,
+       mapType = mapType or 0,
++      layoutId = tonumber(layoutId),
++      nativeLayoutFile = info and info.file,
+       cave = tonumber(cave),
+       allowEscaping = tonumber(allowEscaping),
+       allowRunning = tonumber(allowRunning),
+--- a/src/core/game3/field.lua
++++ b/src/core/game3/field.lua
+@@ -1512,7 +1512,20 @@
+   end
+   local Runtime = package.loaded["src.core.game3.runtime"]
+   local BattleBridge = require("src.core.game3.battle_bridge")
+-  local ok, err = BattleBridge.startWild(Runtime and Runtime._mod, Field._game, enc, {})
++  -- Presentation metadata samples the hooked water, not the trainer's bank.
++  -- The native battle terrain still comes from the player's destination tile.
++  local encounterContext
++  if fishOpts then
++    local Map = require("src.core.game3.map")
++    local def = Map.currentDef() or {}
++    local behavior = require("src.core.game3.collision").behavior(fishOpts.x, fishOpts.y)
++    local terrain = require("src.core.game3.battle.bg").resolveFromBehavior(
++      behavior, def.kind, def.mapType, { mapId = mapId, surfing = false })
++    encounterContext = { source = "fishing", mapId = mapId,
++      x = fishOpts.x, y = fishOpts.y, terrain = terrain }
++  end
++  local ok, err = BattleBridge.startWild(Runtime and Runtime._mod, Field._game, enc,
++    { encounterContext = encounterContext })
+   if not ok then
+     print("[game3/field] fishing startWild failed: " .. tostring(err))
+     return false
+--- a/src/core/game3/palette.lua
++++ b/src/core/game3/palette.lua
+@@ -30,15 +30,39 @@
+       parts[#parts + 1] = string.format("%04x", (colors[c] or 0) % 65536)
+     end
+   end
+-  if extraBlob and type(extraBlob) == "string" then
+-    parts[#parts + 1] = extraBlob
++  -- Keep the legacy double-precision recurrence and its rounding exactly.
++  -- Reading a byte group amortizes VM/C calls; do not replace this with FNV
++  -- integer arithmetic, which would change existing on-disk atlas keys.
++  local h = 2166136261
++  local function feed(s)
++    local i, n = 1, #s
++    while i + 15 <= n do
++      local a,b,c,d,e,f,g,j,k,l,m,o,p,q,r,t = s:byte(i, i + 15)
++      h = (h * 16777619 + a) % 4294967296
++      h = (h * 16777619 + b) % 4294967296
++      h = (h * 16777619 + c) % 4294967296
++      h = (h * 16777619 + d) % 4294967296
++      h = (h * 16777619 + e) % 4294967296
++      h = (h * 16777619 + f) % 4294967296
++      h = (h * 16777619 + g) % 4294967296
++      h = (h * 16777619 + j) % 4294967296
++      h = (h * 16777619 + k) % 4294967296
++      h = (h * 16777619 + l) % 4294967296
++      h = (h * 16777619 + m) % 4294967296
++      h = (h * 16777619 + o) % 4294967296
++      h = (h * 16777619 + p) % 4294967296
++      h = (h * 16777619 + q) % 4294967296
++      h = (h * 16777619 + r) % 4294967296
++      h = (h * 16777619 + t) % 4294967296
++      i = i + 16
++    end
++    while i <= n do
++      h = (h * 16777619 + s:byte(i)) % 4294967296
++      i = i + 1
++    end
+   end
+-  -- FNV-1a 32-bit over hex stream (stable, no bit lib).
+-  local h = 2166136261
+-  local s = table.concat(parts)
+-  for i = 1, #s do
+-    h = (h * 16777619 + s:byte(i)) % 4294967296
+-  end
++  feed(table.concat(parts))
++  if type(extraBlob) == "string" then feed(extraBlob) end
+   return string.format("%08x", h)
+ end
+ 
+--- a/src/core/game3/pokecenter_heal.lua
++++ b/src/core/game3/pokecenter_heal.lua
+@@ -515,6 +515,28 @@
+   love.graphics.setColor(1, 1, 1, 1)
+ end
+ 
++-- Presentation snapshot for alternate field renderers. Native palette phases,
++-- placement, monitor frames and completion callbacks keep their original owner.
++function PokecenterHeal.spriteSnapshot()
++  local fx = PokecenterHeal._fx
++  local out = {}
++  if not fx or not ensure_gfx() then return out end
++  if fx.state < STATE.DUMMY then
++    local image = ball_image(glow_key(fx))
++    if image then
++      for _, b in ipairs(fx.balls) do
++        out[#out + 1] = { image = image, x = b.x, y = b.y, kind = "ball" }
++      end
++    end
++  end
++  if fx.monitorVisible and PokecenterHeal._monQuads then
++    local q = PokecenterHeal._monQuads[fx.monitorFrame or 0]
++    if q then out[#out + 1] = { image = PokecenterHeal._monImg, quad = q,
++      x = fx.monitorX or 0, y = fx.monitorY or 0, kind = "monitor" } end
++  end
++  return out
++end
++
+ -- Exported for tests: pret OAM top-left after centerToCorner.
+ PokecenterHeal._ballScreenTl = ball_screen_tl
+ PokecenterHeal._monitorScreenTl = monitor_screen_tl
+--- a/src/core/game3/scripting/natives_events.lua
++++ b/src/core/game3/scripting/natives_events.lua
+@@ -149,7 +149,8 @@
+       setResult(ctx, 0)
+       return false
+     end
+-    foe.wildScripted = true
++    -- Rock Smash uses the ordinary wild entry point in Emerald and FireRed.
++    -- A script invokes it, but it must still inherit Safari mode.
+     setResult(ctx, 1)
+     local Natives = require("src.core.game3.scripting.natives")
+     return Natives.yieldHost(ctx, adapters, function(done)
+@@ -157,7 +158,7 @@
+         local code = Natives.outcome_to_code(result)
+         if ctx then ctx.lastBattleOutcome = code end
+         done()
+-      end, { wildScripted = true })
++      end)
+     end)
+   end,
+   -- pokefirered/src/save_location.c:105
+--- a/src/core/game3/scripting/ops_a.lua
++++ b/src/core/game3/scripting/ops_a.lua
+@@ -251,6 +251,24 @@
+   local root = Extract.NATIVE_ROOT
+     or ((Extract.CACHE_ROOT or "data/generated/gba") .. "/native")
+   local blob = Dataset.cache():read(root .. "/layouts/alt_" .. layoutId .. ".mid")
++  -- Layouts shared by an existing map (e.g. Shoal high/low tide) are
++  -- already baked under that map's name. Older caches omit alt_<id>.mid.
++  -- Use the imported header ID and untouched cached cells, never another
++  -- live map's overrides. No ROM-cache mutation or synthetic tiles.
++  if not blob then
++    local candidates = {}
++    for id, candidate in pairs(game.data.maps or {}) do
++      if candidate.layoutId == layoutId and candidate.pair == def.pair
++          and type(candidate.nativeLayoutFile) == "string" then
++        candidates[#candidates + 1] = id
++      end
++    end
++    table.sort(candidates)
++    for _, id in ipairs(candidates) do
++      blob = Dataset.cache():read(root .. "/" .. game.data.maps[id].nativeLayoutFile)
++      if blob then break end
++    end
++  end
+   if not blob then
+     if log then log("[game3] setmaplayoutindex " .. layoutId .. ": no baked layout") end
+     return false
+--- /dev/null
++++ b/src/core/game3/se_wave_cache.lua
+@@ -0,0 +1,84 @@
++-- Disposable, lossless SE synthesis cache. Native sequencing and playback remain
++-- in audio.lua; this stores only default-option waveforms, never game state.
++local C = { VERSION = 'OASCSE02', MAX_MEMORY = 64 * 1024 * 1024 }
++local okFfi, ffi = pcall(require, 'ffi')
++local function digest(s) return love.data.hash('sha256', s) end
++local function hex(s) return (s:gsub('.', function(c) return string.format('%02x', c:byte()) end)) end
++local function validId(id) return type(id)=='number' and id>=0 and id<=65535 and id==math.floor(id) end
++function C.encode(w, rate)
++  if not okFfi or type(w.rawL)~='table' or type(w.rawR)~='table' then return end
++  local n=#w.rawL
++  if n<1 or n~=#w.rawR or n>rate*30 then return end
++  local values=ffi.new('double[?]',n*2)
++  for i=1,n do values[(i-1)*2]=w.rawL[i];values[(i-1)*2+1]=w.rawR[i] end
++  local raw=ffi.string(values,n*16)
++  return C.VERSION..(ffi.abi('le') and 'L' or 'B')..(w.loop and '1' or '0')
++    ..love.data.pack('string','<I4I4I4',rate,n,w.loopStart or 4294967295)
++    ..digest(raw)..love.data.compress('string','lz4',raw,1)
++end
++function C.decode(blob, rate)
++  assert(okFfi and type(blob)=='string' and #blob>=55 and #blob<50*1024*1024,'invalid SE record')
++  assert(blob:sub(1,8)==C.VERSION and blob:sub(9,9)==(ffi.abi('le') and 'L' or 'B'),'SE cache format')
++  local loop=blob:sub(10,10);assert(loop=='0' or loop=='1','SE loop flag')
++  local stored,n,start=love.data.unpack('<I4I4I4',blob,11)
++  assert(stored==rate and n>=1 and n<=rate*30 and (start==4294967295 or start<=n),'SE cache dimensions')
++  assert(love.data.unpack('<I4',blob,55)==n*16,'SE cache allocation size')
++  local raw=love.data.decompress('string','lz4',blob:sub(55))
++  assert(#raw==n*16 and digest(raw)==blob:sub(23,54),'SE cache checksum')
++  -- Copy to aligned memory before reading doubles, including on ARM.
++  local values=ffi.new('double[?]',n*2);ffi.copy(values,raw,#raw)
++  local L,R={},{}
++  for i=1,n do L[i]=values[(i-1)*2];R[i]=values[(i-1)*2+1] end
++  return {rawL=L,rawR=R,loop=loop=='1',loopStart=start~=4294967295 and start or nil}
++end
++function C.open(pack, cache, rate)
++  if not(okFfi and love and love.data and love.filesystem and pack and cache and cache.read) then return end
++  local ids={}
++  for id,info in pairs(pack.index.songs or {})do
++    id=tonumber(id)
++    if validId(id) and info.kind=='se' then ids[#ids+1]=id end
++  end
++  table.sort(ids)
++  local pieces={C.VERSION,tostring(rate),ffi.abi('le') and 'le' or 'be',pack.root}
++  local function include(raw) assert(type(raw)=='string','missing cache source');pieces[#pieces+1]=digest(raw) end
++  for _,name in ipairs{'audio','se_wave_cache','m4a_player','m4a_mix','m4a_seq','m4a_sample','se_ids'}do
++    include(love.filesystem.read('src/core/game3/'..name..'.lua'))
++  end
++  include(cache:read(pack.root..'/index.lua'));include(pack.samplesBin)
++  for _,name in ipairs{'samples.lua','voicegroups.lua'}do pieces[#pieces+1]=digest(cache:read(pack.root..'/'..name) or '') end
++  -- A changed imported song invalidates the archive even with an identical ROM label.
++  for _,id in ipairs(ids)do include(cache:read(string.format('%s/songs/%d.bin',pack.root,id))) end
++  local path='cache/firered-se/'..hex(digest(table.concat(pieces,'\0')))
++  local self={path=path,rate=rate,ids=ids,blobs={},bytes=0,hits=0,misses=0,invalid=0,writes=0}
++  local function remember(id,blob)
++    if not self.blobs[id] and self.bytes+#blob<=C.MAX_MEMORY then self.blobs[id]=blob;self.bytes=self.bytes+#blob end
++  end
++  function self:get(id)
++    if not validId(id)then return end
++    local blob=self.blobs[id]
++    if not blob then blob=love.filesystem.read(self.path..'/'..id..'.bin') end
++    if blob then
++      local ok,w=pcall(C.decode,blob,self.rate)
++      if ok then remember(id,blob);self.hits=self.hits+1;return w end
++      if self.blobs[id]then self.bytes=self.bytes-#self.blobs[id];self.blobs[id]=nil end
++      self.invalid=self.invalid+1
++    end
++    self.misses=self.misses+1
++  end
++  function self:put(id,w)
++    if not validId(id)then return end
++    local ok,blob=pcall(C.encode,w,self.rate);if not(ok and blob)then return end
++    remember(id,blob)
++    -- Writes are best-effort and atomic. Missing permissions/corrupt files never
++    -- prevent native synthesis or boot; a later run can simply regenerate them.
++    pcall(function()
++      if not love.filesystem.createDirectory(self.path)then return end
++      local rel=self.path..'/'..id..'.bin'
++      if love.filesystem.write(rel..'.tmp',blob)then
++        if os.rename(love.filesystem.getSaveDirectory()..'/'..rel..'.tmp',love.filesystem.getSaveDirectory()..'/'..rel)then self.writes=self.writes+1 end
++      end
++    end)
++  end
++  return self
++end
++return C
+--- a/src/core/game3/tileset_native.lua
++++ b/src/core/game3/tileset_native.lua
+@@ -88,7 +88,7 @@
+   if not idxBlob or not palBlob then
+     return nil, "missing native blobs for " .. tostring(pair)
+   end
+-  local idxTbl, ierr = NativePack.decodeIdx(idxBlob)
++  local idxTbl, ierr = NativePack.decodeIdx(idxBlob, true)
+   if not idxTbl then return nil, ierr end
+   local rgb, bgr = Palette.load(palBlob)
+   if not rgb then return nil, bgr end
+@@ -130,7 +130,7 @@
+ 
+   if layered then
+     local overBlob = cache:read(NATIVE .. "/" .. pair .. "/mids_over.idx")
+-    local overTbl = overBlob and NativePack.decodeIdx(overBlob)
++    local overTbl = overBlob and NativePack.decodeIdx(overBlob, true)
+     if overTbl then
+       local overHash = Palette.hash(bgr, overBlob)
+       local oImg, oData = bake_or_load(cache, pair, overTbl, rgb, overHash, "o", true)
+@@ -142,13 +142,31 @@
+       end
+     end
+     local midBlob = cache:read(NATIVE .. "/" .. pair .. "/mids_mid.idx")
+-    local midTbl = midBlob and NativePack.decodeIdx(midBlob)
++    local midTbl = midBlob and NativePack.decodeIdx(midBlob, true)
+     if midTbl then
+       ts.midImage = bake_or_load(cache, pair, midTbl, rgb, Palette.hash(bgr, midBlob), "m", true)
+     end
+   end
+ 
+   return ts
++end
++
++-- Explicit loading-phase preparation. Use the same cache and animation binding
++-- as the eventual map; never change the current map or request unrelated pairs.
++function NativeTileset.prepareMaps(maps, ids)
++  local seen, count = {}, 0
++  for _, id in ipairs(ids or {}) do
++    local def = maps and maps[id]
++    local pair = def and def.pair
++    if type(pair) == "string" and not seen[pair] then
++      seen[pair] = true
++      if NativeTileset.ready(pair) then
++        local ok, atlas = pcall(NativeTileset.get, pair)
++        if ok and atlas then count = count + 1 end
++      end
++    end
++  end
++  return count
+ end
+ 
+ function NativeTileset.ready(pair)
+--- a/src/import/gba/native_pack.lua
++++ b/src/import/gba/native_pack.lua
+@@ -104,7 +104,7 @@
+   return table.concat(parts)
+ end
+ 
+-function NativePack.decodeIdx(blob)
++function NativePack.decodeIdx(blob, headersOnly)
+   if type(blob) ~= "string" or #blob < 12 or blob:sub(1, 4) ~= NativePack.MAGIC_IDX then
+     return nil, "bad mids.idx magic"
+   end
+@@ -134,10 +134,17 @@
+     midIds[i] = read_u16(blob, off)
+     off = off + 2
+   end
+-  local pixels = {}
+-  local n = midCount * 256
+-  for i = 1, n do
+-    pixels[i] = blob:byte(off + i - 1) or 0
++  -- Atlas cache hits only need dimensions and metatile IDs. Keep all header
++  -- and payload-length validation above, without materialising one Lua number
++  -- per pixel. RGBA cache misses can read the validated packed bytes directly;
++  -- default callers retain the complete decoded pixel table.
++  local pixels
++  if not headersOnly then
++    pixels = {}
++    local n = midCount * 256
++    for i = 1, n do
++      pixels[i] = blob:byte(off + i - 1) or 0
++    end
+   end
+   return {
+     formatVersion = formatVersion,
+@@ -147,6 +154,8 @@
+     atlasRows = atlasRows,
+     midIds = midIds,
+     pixels = pixels,
++    pixelBlob = headersOnly and blob or nil,
++    pixelOffset = headersOnly and off or nil,
+   }
+ end
+ 
+@@ -225,25 +234,30 @@
+       lut[byte] = string.char(rgb[1] or 0, rgb[2] or 0, rgb[3] or 0, 255)
+     end
+   end
+-  -- Fill atlas by mid slot: slot i occupies atlas cell (i%cols, floor(i/cols)).
++  -- Convert contiguous native tile rows, avoiding per-pixel division/modulo.
+   local pixels = idxTbl.pixels or {}
++  local pixelBlob, pixelOffset = idxTbl.pixelBlob, idxTbl.pixelOffset
+   local rowChunks = {}
+-  for ay = 0, h - 1 do
+-    local midRow = math.floor(ay / 16)
+-    local py = ay % 16
+-    local line = {}
+-    for ax = 0, w - 1 do
+-      local midCol = math.floor(ax / 16)
+-      local px = ax % 16
+-      local slot = midRow * cols + midCol -- 0-based atlas slot
+-      local byte = 0
+-      if slot < midCount then
+-        local base = slot * 256
+-        byte = pixels[base + py * 16 + px + 1] or 0
++  local empty = string.rep(lut[0],16)
++  for midRow = 0, rows - 1 do
++    for py = 0, 15 do
++      local line = {}
++      for midCol = 0, cols - 1 do
++        local slot = midRow * cols + midCol
++        if slot < midCount then
++          local base = slot * 256 + py * 16
++          if pixelBlob then
++            local a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p = pixelBlob:byte(pixelOffset + base, pixelOffset + base + 15)
++            line[midCol + 1] = lut[a] .. lut[b] .. lut[c] .. lut[d] .. lut[e] .. lut[f] .. lut[g] .. lut[h] .. lut[i] .. lut[j] .. lut[k] .. lut[l] .. lut[m] .. lut[n] .. lut[o] .. lut[p]
++          else
++          line[midCol + 1] = (lut[pixels[base + 1] or 0] or lut[0]) .. (lut[pixels[base + 2] or 0] or lut[0]) .. (lut[pixels[base + 3] or 0] or lut[0]) .. (lut[pixels[base + 4] or 0] or lut[0]) .. (lut[pixels[base + 5] or 0] or lut[0]) .. (lut[pixels[base + 6] or 0] or lut[0]) .. (lut[pixels[base + 7] or 0] or lut[0]) .. (lut[pixels[base + 8] or 0] or lut[0]) .. (lut[pixels[base + 9] or 0] or lut[0]) .. (lut[pixels[base + 10] or 0] or lut[0]) .. (lut[pixels[base + 11] or 0] or lut[0]) .. (lut[pixels[base + 12] or 0] or lut[0]) .. (lut[pixels[base + 13] or 0] or lut[0]) .. (lut[pixels[base + 14] or 0] or lut[0]) .. (lut[pixels[base + 15] or 0] or lut[0]) .. (lut[pixels[base + 16] or 0] or lut[0])
++          end
++        else
++          line[midCol + 1] = empty
++        end
+       end
+-      line[ax + 1] = lut[byte] or lut[0]
+-    end
+-    rowChunks[ay + 1] = table.concat(line)
++      rowChunks[#rowChunks + 1] = table.concat(line)
++    end
+   end
+   return table.concat(rowChunks), w, h
+ end
+--- a/src/mods/Loader.lua
++++ b/src/mods/Loader.lua
+@@ -1698,6 +1698,40 @@
+   }, { __index = api.content })
+   -- the mod's own directory and nothing above it: PhysFS already refuses a
+   -- climb, but loader.fs is injectable and has no such floor
++  -- Read-only identity for prebuilt render artifacts. Only hashes of named
++  -- engine Lua sources are exposed; no host paths or file contents escape.
++  -- Hash only caller-provided bytes. No paths, native handles or raw FFI
++  -- become visible to mod code; the standard sandbox remains unchanged.
++  function api:sha256(bytes)
++    assert(type(bytes)=="string" and #bytes<=128*1024*1024,"hash byte-string size")
++    return engineRequire("src.core.ByteHash").sha256(bytes)
++  end
++  function api:sha256Backend()
++    return engineRequire("src.core.ByteHash").backend()
++  end
++  function api:engineFingerprint(paths)
++    if type(paths) ~= "table" or #paths < 1 or #paths > 4096 then return nil end
++    local ok, result = pcall(function()
++      local previous = ""
++      for _, path in ipairs(paths) do
++        assert(type(path) == "string" and path:match("^src/[%w_/-]+%.lua$")
++          and not path:find("..", 1, true) and path > previous, "engine source path")
++        previous = path
++      end
++      local key = table.concat(paths, "\0")
++      loader.renderFingerprints = loader.renderFingerprints or {}
++      if loader.renderFingerprints[key] then return loader.renderFingerprints[key] end
++      local rows = {}
++      for _, path in ipairs(paths) do
++        local raw = assert(loader.fs.read(path), "engine source unreadable")
++        rows[#rows + 1] = path .. "\0" .. love.data.hash("sha256", raw)
++      end
++      local digest = love.data.encode("string", "hex", love.data.hash("sha256", table.concat(rows)))
++      loader.renderFingerprints[key] = digest
++      return digest
++    end)
++    return ok and result or nil
++  end
+   function api:read(relative)
+     return loader.fs.read(SafePath.join(self.path, relative, "mod:read"))
+   end
+--- a/src/ui/game3/hud.lua
++++ b/src/ui/game3/hud.lua
+@@ -252,7 +252,11 @@
+     local top = Stack.top()
+     local evoTop = top and top.id == "evolution_scene" and (inputTop == nil or top == inputTop)
+     local pyramidBagTop = top and top.id == "rse_pyramid_bag"
+-    if (not inBattle) or evoTop or pyramidBagTop or (top and top.id == "naming") then
++    -- Emerald's Safari selection is a native modal, like the Pyramid bag.
++    -- Only its owning phase may forward input; do not replay the opening A.
++    local safariCaseTop = top and top.id == "rse_pokeblock_case"
++      and Battle._phase == "safari_pokeblock" and (inputTop == nil or top == inputTop)
++    if (not inBattle) or evoTop or pyramidBagTop or safariCaseTop or (top and top.id == "naming") then
+       if update_top_menu(input) then
+         return
+       end

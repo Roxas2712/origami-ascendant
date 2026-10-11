@@ -1,0 +1,57 @@
+--- a/src/mods/Loader.lua
++++ b/src/mods/Loader.lua
+@@ -1700,6 +1700,15 @@
+   -- climb, but loader.fs is injectable and has no such floor
+   -- Read-only identity for prebuilt render artifacts. Only hashes of named
+   -- engine Lua sources are exposed; no host paths or file contents escape.
++  -- Hash only caller-provided bytes. No paths, native handles or raw FFI
++  -- become visible to mod code; the standard sandbox remains unchanged.
++  function api:sha256(bytes)
++    assert(type(bytes)=="string" and #bytes<=128*1024*1024,"hash byte-string size")
++    return engineRequire("src.core.ByteHash").sha256(bytes)
++  end
++  function api:sha256Backend()
++    return engineRequire("src.core.ByteHash").backend()
++  end
+   function api:engineFingerprint(paths)
+     if type(paths) ~= "table" or #paths < 1 or #paths > 4096 then return nil end
+     local ok, result = pcall(function()
+--- /dev/null
++++ b/src/core/ByteHash.lua
+@@ -0,0 +1,36 @@
++-- Engine-owned SHA-256 for byte strings; never exposes FFI to mods.
++-- macOS system crypto is optional; all other platforms retain LÖVE's hash.
++local M={};local initialized,systemHash,backend=false,nil,'love'
++local function initialize()
++ if initialized then return end;initialized=true
++ if love.system.getOS()~='OS X'then return end
++ local ok,fn=pcall(function()
++  local ffi=require('ffi')
++  ffi.cdef('unsigned char *CC_SHA256(const void *data, unsigned int len, unsigned char *md);')
++  local crypto=ffi.load('/usr/lib/system/libcommonCrypto.dylib')
++  local buffer=ffi.new('unsigned char[32]')
++  local function digest(raw)
++   assert(crypto.CC_SHA256(raw,#raw,buffer)~=nil,'system SHA-256 failed')
++   return ffi.string(buffer,32)
++  end
++  -- Check the actual backend, including empty input and a multi-block binary
++  -- value, before allowing it to validate any cached geometry or source file.
++  for _,raw in ipairs{'','abc',string.rep('\0\255\128',67)}do
++   assert(digest(raw)==love.data.hash('sha256',raw),'system SHA-256 self-test')
++  end
++  return digest
++ end)
++ if ok then systemHash=fn;backend='macos-commoncrypto'end
++end
++function M.sha256(raw)
++ assert(type(raw)=='string','cache hash expects byte string')
++ initialize()
++ local digest
++ if systemHash and #raw<=4294967295 then
++  local ok,result=pcall(systemHash,raw)
++  if ok then digest=result else systemHash=nil;backend='love'end
++ end
++ return love.data.encode('string','hex',digest or love.data.hash('sha256',raw))
++end
++function M.backend()initialize();return backend end
++return M

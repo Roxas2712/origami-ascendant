@@ -1,0 +1,25 @@
+{
+  "id": "ORIGAMI_ASCENDANT",
+  "name": "Origami Ascendant",
+  "version": "1.0.0",
+  "api": 2,
+  "entry": "gen3/entry.lua",
+  "profile": "content",
+  "category": "GRAPHICS",
+  "games": [
+    "firered",
+    "leafgreen",
+    "emerald"
+  ],
+  "game_version": ">=0.2.64 <2.0.0",
+  "priority": 100,
+  "dependencies": [],
+  "description": "Paper diorama worlds, dynamic lighting, weather, field zoom, and MAP / Terrarium battles for FireRed, LeafGreen and Emerald.",
+  "permissions": [
+    "engine_internals",
+    "compute",
+    "network",
+    "filesystem"
+  ],
+  "log_url": "https://ascendant-logs.pausihausi.synology.me/ingest/6a4cb1e335e4e3e05f57f2277b21455c13fcf31044998e8b1fa4fc68d9e637af/ORIGAMI_ASCENDANT"
+}

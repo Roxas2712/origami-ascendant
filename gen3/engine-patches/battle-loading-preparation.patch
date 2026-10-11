@@ -1,0 +1,214 @@
+--- a/src/core/Game3.lua
++++ b/src/core/Game3.lua
+@@ -124,6 +124,14 @@
+ 
+ function Game3:load(opts)
+   local activeVersion = require("src.core.GameVersion").get()
++  -- The bundled macOS ARM64 runtime starts in interpreter mode. Enable its
++  -- supported compiler for FireRed; preserve the caller's mode on reset.
++  if activeVersion == "firered" and jit and jit.os == "OSX" and jit.arch == "arm64"
++    and not jit.status() and os.getenv("POKEPORT_FR_JIT") ~= "0" then
++    local ok = pcall(jit.on)
++    self._frEnabledJit = ok and jit.status() or nil
++    print("[game3] FireRed JIT", self._frEnabledJit and "enabled" or "unavailable")
++  end
+   require("src.import.gba.versions").select(activeVersion)
+   require("src.core.game3.se_ids").select(activeVersion)
+   require("src.core.game3.song_ids").select(activeVersion)
+@@ -199,7 +207,7 @@
+   -- Do native SE synthesis before boot/UI or field callbacks become interactive.
+   -- Use the saved cartridge sound mode without mutating session state.
+   if activeVersion == "firered" then
+-    Audio.prepareCommonSe({ mono = (tonumber(Options.block(options).sound) or 0) == 0 })
++    require("src.core.game3.battle_loading").prepare(Audio, { mono = (tonumber(Options.block(options).sound) or 0) == 0 })
+     require("src.core.game3.tileset_native").prepareMaps(self.data.maps, {
+       "FR_PLAYERS_HOUSE_1F", "FR_PLAYERS_HOUSE_2F", "FR_OAKS_LAB",
+       "FR_VIRIDIAN_CITY_MART", "FR_VIRIDIAN_CITY_POKEMON_CENTER_1F",
+@@ -1302,6 +1310,7 @@
+ end
+ 
+ function Game3:reset()
++  if self._frEnabledJit then pcall(jit.off); self._frEnabledJit = nil end
+   self.questPlayback = nil
+   Help.reset()
+   Audio.endSession()
+--- a/src/core/game3/audio.lua
++++ b/src/core/game3/audio.lua
+@@ -800,6 +800,7 @@
+ Audio.SE_ONESHOT_MAX_SEC = 30
+ 
+ function Audio._seRawClear()
++  Audio._seArchive = nil
+   Audio._seRaw = {}
+   Audio._seRawFrames = 0
+   Audio._seRawTick = 0
+@@ -839,6 +840,13 @@
+ function Audio._loadSeWaveform(id, opts)
+   local memoable = opts.loop == nil and opts.maxSec == nil
+   local hit = memoable and Audio._seRawGet(id) or nil
++  if not hit and memoable and Audio._seArchive then
++    local ok,w=pcall(Audio._seArchive.get,Audio._seArchive,id)
++    if ok and w then
++      Audio._seRawPut(id,w.loop,w.rawL,w.rawR,w.loopStart)
++      hit=Audio._seRaw and Audio._seRaw[id]
++    end
++  end
+   local loop, rawL, rawR, loopStart
+   if hit then
+     loop, rawL, rawR, loopStart = hit.loop, hit.rawL, hit.rawR, hit.loopStart
+@@ -874,6 +882,9 @@
+         "SE " .. tostring(id) .. " hit the " .. tostring(maxSec) .. "s bake ceiling")
+     end
+     if memoable then
++      if Audio._seArchive then
++        Audio._seArchive:put(id,{loop=loop and true or false,rawL=rawL,rawR=rawR,loopStart=loopStart})
++      end
+       Audio._seRawPut(id, loop and true or false, rawL, rawR, loopStart)
+       hit = Audio._seRaw and Audio._seRaw[id]
+     end
+@@ -909,6 +920,24 @@
+       end
+     end
+   end
++  return count
++end
++
++-- Explicit loading only. Keep the existing bounded raw/PCM LRU; compressed
++-- exact doubles retain the full sound set without retaining all Lua sample tables.
++function Audio.prepareAllSe(opts, progress)
++  if not Audio.isReady() then return 0 end
++  local ok,archive=pcall(function()
++    return require('src.core.game3.se_wave_cache').open(Audio._pack,Audio._cache,Mix.SAMPLE_RATE)
++  end)
++  if not(ok and archive)then return Audio.prepareCommonSe(opts)end
++  Audio._seArchive=archive
++  local count=0
++  for i,id in ipairs(archive.ids)do
++    count=count+Audio.prepareSe({id},opts)
++    if progress then progress(i,#archive.ids)end
++  end
++  Audio.prepareCommonSe(opts) -- Keep boot/field/ball/hit sounds hot after the full sweep.
+   return count
+ end
+ 
+--- /dev/null
++++ b/src/core/game3/se_wave_cache.lua
+@@ -0,0 +1,84 @@
++-- Disposable, lossless SE synthesis cache. Native sequencing and playback remain
++-- in audio.lua; this stores only default-option waveforms, never game state.
++local C = { VERSION = 'OASCSE02', MAX_MEMORY = 64 * 1024 * 1024 }
++local okFfi, ffi = pcall(require, 'ffi')
++local function digest(s) return love.data.hash('sha256', s) end
++local function hex(s) return (s:gsub('.', function(c) return string.format('%02x', c:byte()) end)) end
++local function validId(id) return type(id)=='number' and id>=0 and id<=65535 and id==math.floor(id) end
++function C.encode(w, rate)
++  if not okFfi or type(w.rawL)~='table' or type(w.rawR)~='table' then return end
++  local n=#w.rawL
++  if n<1 or n~=#w.rawR or n>rate*30 then return end
++  local values=ffi.new('double[?]',n*2)
++  for i=1,n do values[(i-1)*2]=w.rawL[i];values[(i-1)*2+1]=w.rawR[i] end
++  local raw=ffi.string(values,n*16)
++  return C.VERSION..(ffi.abi('le') and 'L' or 'B')..(w.loop and '1' or '0')
++    ..love.data.pack('string','<I4I4I4',rate,n,w.loopStart or 4294967295)
++    ..digest(raw)..love.data.compress('string','lz4',raw,1)
++end
++function C.decode(blob, rate)
++  assert(okFfi and type(blob)=='string' and #blob>=55 and #blob<50*1024*1024,'invalid SE record')
++  assert(blob:sub(1,8)==C.VERSION and blob:sub(9,9)==(ffi.abi('le') and 'L' or 'B'),'SE cache format')
++  local loop=blob:sub(10,10);assert(loop=='0' or loop=='1','SE loop flag')
++  local stored,n,start=love.data.unpack('<I4I4I4',blob,11)
++  assert(stored==rate and n>=1 and n<=rate*30 and (start==4294967295 or start<=n),'SE cache dimensions')
++  assert(love.data.unpack('<I4',blob,55)==n*16,'SE cache allocation size')
++  local raw=love.data.decompress('string','lz4',blob:sub(55))
++  assert(#raw==n*16 and digest(raw)==blob:sub(23,54),'SE cache checksum')
++  -- Copy to aligned memory before reading doubles, including on ARM.
++  local values=ffi.new('double[?]',n*2);ffi.copy(values,raw,#raw)
++  local L,R={},{}
++  for i=1,n do L[i]=values[(i-1)*2];R[i]=values[(i-1)*2+1] end
++  return {rawL=L,rawR=R,loop=loop=='1',loopStart=start~=4294967295 and start or nil}
++end
++function C.open(pack, cache, rate)
++  if not(okFfi and love and love.data and love.filesystem and pack and cache and cache.read) then return end
++  local ids={}
++  for id,info in pairs(pack.index.songs or {})do
++    id=tonumber(id)
++    if validId(id) and info.kind=='se' then ids[#ids+1]=id end
++  end
++  table.sort(ids)
++  local pieces={C.VERSION,tostring(rate),ffi.abi('le') and 'le' or 'be',pack.root}
++  local function include(raw) assert(type(raw)=='string','missing cache source');pieces[#pieces+1]=digest(raw) end
++  for _,name in ipairs{'audio','se_wave_cache','m4a_player','m4a_mix','m4a_seq','m4a_sample','se_ids'}do
++    include(love.filesystem.read('src/core/game3/'..name..'.lua'))
++  end
++  include(cache:read(pack.root..'/index.lua'));include(pack.samplesBin)
++  for _,name in ipairs{'samples.lua','voicegroups.lua'}do pieces[#pieces+1]=digest(cache:read(pack.root..'/'..name) or '') end
++  -- A changed imported song invalidates the archive even with an identical ROM label.
++  for _,id in ipairs(ids)do include(cache:read(string.format('%s/songs/%d.bin',pack.root,id))) end
++  local path='cache/firered-se/'..hex(digest(table.concat(pieces,'\0')))
++  local self={path=path,rate=rate,ids=ids,blobs={},bytes=0,hits=0,misses=0,invalid=0,writes=0}
++  local function remember(id,blob)
++    if not self.blobs[id] and self.bytes+#blob<=C.MAX_MEMORY then self.blobs[id]=blob;self.bytes=self.bytes+#blob end
++  end
++  function self:get(id)
++    if not validId(id)then return end
++    local blob=self.blobs[id]
++    if not blob then blob=love.filesystem.read(self.path..'/'..id..'.bin') end
++    if blob then
++      local ok,w=pcall(C.decode,blob,self.rate)
++      if ok then remember(id,blob);self.hits=self.hits+1;return w end
++      if self.blobs[id]then self.bytes=self.bytes-#self.blobs[id];self.blobs[id]=nil end
++      self.invalid=self.invalid+1
++    end
++    self.misses=self.misses+1
++  end
++  function self:put(id,w)
++    if not validId(id)then return end
++    local ok,blob=pcall(C.encode,w,self.rate);if not(ok and blob)then return end
++    remember(id,blob)
++    -- Writes are best-effort and atomic. Missing permissions/corrupt files never
++    -- prevent native synthesis or boot; a later run can simply regenerate them.
++    pcall(function()
++      if not love.filesystem.createDirectory(self.path)then return end
++      local rel=self.path..'/'..id..'.bin'
++      if love.filesystem.write(rel..'.tmp',blob)then
++        if os.rename(love.filesystem.getSaveDirectory()..'/'..rel..'.tmp',love.filesystem.getSaveDirectory()..'/'..rel)then self.writes=self.writes+1 end
++      end
++    end)
++  end
++  return self
++end
++return C
+--- /dev/null
++++ b/src/core/game3/battle_loading.lua
+@@ -0,0 +1,31 @@
++-- Run before the boot menu/field becomes interactive, never at a battle boundary.
++local M={}
++function M.prepare(Audio, opts)
++  local started=love.timer and love.timer.getTime() or 0
++  local last=-math.huge
++  local function progress(i,total)
++    local g=love.graphics
++    if not(g and g.isActive and g.isActive() and love.timer)then return end
++    local now=love.timer.getTime();if now-last<.1 and i~=total then return end;last=now
++    g.push('all');g.setCanvas();g.origin();g.setShader();g.setScissor();g.setDepthMode()
++    g.clear(.055,.08,.10,1);g.setColor(.9,.94,.9,1)
++    local w,h=g.getDimensions()
++    g.printf('Preparing battle effects...',0,h*.45,w,'center')
++    local width=math.min(360,w*.6);g.setColor(.2,.27,.3,1);g.rectangle('fill',(w-width)/2,h*.52,width,8)
++    g.setColor(.65,.82,.65,1);g.rectangle('fill',(w-width)/2,h*.52,width*i/math.max(1,total),8)
++    g.pop();g.present();if love.event then love.event.pump()end
++  end
++  progress(0,1)
++  require('src.core.game3.battle.anim').scriptForMove(1)
++  require('src.core.game3.battle.anim_templates')
++  require('src.core.game3.battle.anim_callbacks')
++  -- These tables are otherwise required from the first particle callback.
++  require('src.core.game3.battle.anim_port.g1_templates')
++  require('src.core.game3.battle.anim_port.g2_templates')
++  local n=Audio.prepareAllSe(opts,progress)
++  local archive=Audio._seArchive
++  print('BATTLE_LOADING_READY',n,archive and archive.hits or 0,archive and archive.misses or 0,
++    archive and archive.bytes or 0,love.timer and (love.timer.getTime()-started)*1000 or 0)
++  return n
++end
++return M

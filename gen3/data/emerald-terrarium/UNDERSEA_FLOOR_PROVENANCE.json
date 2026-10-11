@@ -1,0 +1,7 @@
+{
+  "generator": "built-in image_gen",
+  "prompt": "Use case: stylized-concept. Production game texture, fully opaque square 1024x1024, seamless-looking top-down surface of pale warm ivory coastal limestone and fine sea sand constructed from many thin overlapping cut-paper pieces. Orthographic directly overhead, completely flat texture filling the entire image edge to edge. Soft cream, warm off-white and very pale light beige palette, subtle paper fiber grain, small irregular paper stone plates, delicate sand ripples, tiny scattered shell fragments mostly near the edges. Quiet open central area for a Pokémon battle, with restrained tonal variation. No large cracks, no folds crossing the whole image, no heavy shadows, no radial design, no circle outline, no scene, no cliffs, no terrain elevation, no water, no objects or characters, no text. Crisp sophisticated paper illustration, thin cream cut edges and restrained shallow contact shadows; not photographic asphalt or 3D rock.",
+  "source": "<asset-generation>/generated_images/01a0f305-8a5e-71c3-b21a-b96d47ff8f59/exec-4d3ab75e-6966-4135-8eec-9504696d8062.png",
+  "destination": "undersea-sand-floor.png",
+  "changes": "none"
+}

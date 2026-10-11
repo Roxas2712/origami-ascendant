@@ -1,0 +1,182 @@
+[
+  {
+    "file": "gyms/PewterTerrarium.lua",
+    "sha256": "8ccd03811c28f14720c985d06924fcfc171413a95f2811e2f0b142b7fe3d8799",
+    "author": "Omega Dias / ΩDIAS",
+    "revision": "original supplied module"
+  },
+  {
+    "file": "gyms/CeruleanTerrarium.lua",
+    "sha256": "f167b8c4c49c919dedfcedefa541e8b610f8e3d94ed1d158d82192eee5892c23",
+    "author": "Omega Dias / ΩDIAS",
+    "revision": "original supplied module"
+  },
+  {
+    "file": "gyms/VermilionTerrarium.lua",
+    "sha256": "8ce22634dff1bae7125273225e05dfb8056309de91ee995f2b1cb3a824cc5358",
+    "author": "Omega Dias / ΩDIAS",
+    "revision": "original supplied module"
+  },
+  {
+    "file": "gyms/CeladonTerrarium.lua",
+    "sha256": "fb037dcccab0c118f66f883b872fb4f060eb3b7bd7cb620404134f1efae007e1",
+    "author": "Omega Dias / ΩDIAS",
+    "revision": "original supplied module"
+  },
+  {
+    "file": "gyms/FuchsiaTerrarium.lua",
+    "sha256": "ac7d051279a81458fd63c6ce4dfafd33e7315788a9f9470cd9fb93998b3de598",
+    "author": "Omega Dias / ΩDIAS",
+    "revision": "original supplied module"
+  },
+  {
+    "file": "gyms/SaffronTerrarium.lua",
+    "sha256": "5e8f3be366ec0e056a17d42efa339a0b379965594623b5584f0ee1c3221d9092",
+    "author": "Omega Dias / ΩDIAS",
+    "revision": "original supplied module"
+  },
+  {
+    "file": "gyms/CinnabarTerrarium.lua",
+    "sha256": "c634e427dcb133b6a63191cc04aa5304b4fa33d567eb9453dde627c40ea23592",
+    "author": "Omega Dias / ΩDIAS",
+    "revision": "original supplied module"
+  },
+  {
+    "file": "gyms/ViridianTerrarium.lua",
+    "sha256": "d5bcd643f9927b00707cebe320906a54d1e36273ccb6a4484d6cc20e4e6ddd91",
+    "author": "Omega Dias / ΩDIAS",
+    "revision": "original supplied module"
+  },
+  {
+    "file": "gyms/LoreleiTerrarium.lua",
+    "sha256": "ad6a05f5d03fda9e5a772fb532d0237cc2d68b945d971619419a3990bc87959f",
+    "author": "Omega Dias / ΩDIAS",
+    "revision": "original supplied module"
+  },
+  {
+    "file": "gyms/BrunoTerrarium.lua",
+    "sha256": "b2c08edeb486e1be6f0304bc7d5599e4316045e61d89edc0704b76d2499327c7",
+    "author": "Omega Dias / ΩDIAS",
+    "revision": "original supplied module"
+  },
+  {
+    "file": "gyms/AgathaTerrarium.lua",
+    "sha256": "bef6a8e0093b84c177704b6ecd1c8a06a33efa8ab98b0dc5b11618ec19d84c9a",
+    "author": "Omega Dias / ΩDIAS",
+    "revision": "original supplied module"
+  },
+  {
+    "file": "gyms/LanceTerrarium.lua",
+    "sha256": "335a0312ce09ed51f22c807e7212f17f708ee44afd569bea037fac08b32af51a",
+    "author": "Omega Dias / ΩDIAS",
+    "revision": "original supplied module"
+  },
+  {
+    "file": "gyms/ChampionTerrarium.lua",
+    "sha256": "6511fcd86085eac5e4507b4fbb0cdb783e1a6accd11694951ce2f18a25dd515d",
+    "author": "Omega Dias / ΩDIAS",
+    "revision": "original supplied module"
+  },
+  {
+    "file": "gyms/PokemonTowerTerrarium.lua",
+    "sha256": "9028c22e7c9f2046f57d320ddbd592ee4cd21afdd45d716b9f61ab8ed1bbba52",
+    "author": "Omega Dias / ΩDIAS",
+    "revision": "original supplied module; host suppresses ghost button"
+  },
+  {
+    "file": "gyms/RocketHideout2Terrarium.lua",
+    "sha256": "5d752ff0c2c115280bb88d10691776e5eae3bd822e0aad093433c6a4748db9b3",
+    "author": "Omega Dias / ΩDIAS",
+    "revision": "original supplied module"
+  },
+  {
+    "file": "gyms/SSAnneTerrarium.lua",
+    "sha256": "7f5dd37313fd1b447a0b54b56ee8e567f5738404ca180389f762b655a9421eb4",
+    "author": "Omega Dias / ΩDIAS",
+    "revision": "original supplied module"
+  },
+  {
+    "file": "gyms/FightingDojoTerrarium.lua",
+    "sha256": "4a5016de0eb1f9da643cca8a298b392736847542d15054db0b73b18f3c91554e",
+    "author": "Omega Dias / ΩDIAS",
+    "revision": "original supplied module"
+  },
+  {
+    "file": "gyms/PowerPlantTerrarium.lua",
+    "sha256": "46d0d98ca5171f88560f87cf2334df7ab83796490570e4c18704355c73d0287d",
+    "author": "Omega Dias / ΩDIAS",
+    "revision": "original supplied module"
+  },
+  {
+    "file": "gyms/ViridianForestTerrarium.lua",
+    "sha256": "d4c6f1bd2e097e84ef50ba15fe8194c8644d477d9aa36527765a10e85bbb3b36",
+    "author": "Omega Dias / ΩDIAS",
+    "revision": "original supplied module"
+  },
+  {
+    "file": "gyms/RocketHideout1Terrarium.lua",
+    "sha256": "f0f456c15cb75082cf932d770b1665a0bc169b048203a6661224c719da0f885a",
+    "author": "Omega Dias / ΩDIAS",
+    "revision": "original supplied module"
+  },
+  {
+    "file": "gyms/SilphCompanyTerrarium.lua",
+    "sha256": "ce8cba283666765cd3aa6f73a503be9e4629814d0f8d7428435fc6a54d3b22b1",
+    "author": "Omega Dias / ΩDIAS",
+    "revision": "original supplied module"
+  },
+  {
+    "file": "gyms/PokemonMansionTerrarium.lua",
+    "sha256": "d6979d34c9f845d2c0c5d021c889f3948a7c9e650f57dae758d904a8c0b964e6",
+    "author": "Omega Dias / ΩDIAS",
+    "revision": "original supplied module"
+  },
+  {
+    "file": "gyms/SafariZoneTerrarium.lua",
+    "sha256": "a85f0cde64b901e17ab9fd2f2c02a58054f6132f9498088085ba78865aaf61fc",
+    "author": "Omega Dias / ΩDIAS",
+    "revision": "original supplied module"
+  },
+  {
+    "file": "gyms/MtMoonTerrarium.lua",
+    "sha256": "9f2b63608d49d6b426f5dd0b1282a54b7257376805c8bb4cf78b0947ed04712a",
+    "author": "Omega Dias / ΩDIAS",
+    "revision": "original supplied module"
+  },
+  {
+    "file": "gyms/DiglettsCaveTerrarium.lua",
+    "sha256": "09f6410a2a67bc9ad37de51517198c8435fe9d4f8c60fa3b827da56166b3ce6f",
+    "author": "Omega Dias / ΩDIAS",
+    "revision": "original supplied module"
+  },
+  {
+    "file": "gyms/CeruleanCaveTerrarium.lua",
+    "sha256": "5d6bca4600db16cd38f782a51a036cbfcd3e9225fc88c153941b0975e5b5b35d",
+    "author": "Omega Dias / ΩDIAS",
+    "revision": "original supplied module"
+  },
+  {
+    "file": "gyms/OakLabTerrarium.lua",
+    "sha256": "bf47eb614141330c3be86231cd8d7d32012b92e202749ca3bfadb8a496f63c5d",
+    "author": "Omega Dias / ΩDIAS",
+    "revision": "original supplied module"
+  },
+  {
+    "file": "gyms/ChampionRoadTerrarium.lua",
+    "sha256": "75a78497c44e8c9450c4e53b43cb5749a993b22495b9ef9233d16285f8586e12",
+    "author": "Omega Dias / ΩDIAS",
+    "revision": "original supplied module"
+  },
+  {
+    "file": "gyms/Route17Terrarium.lua",
+    "sha256": "d36bf56d4c65e0e51153a8de33cb97ba25100db9efb57c8be64895b08049c8c2",
+    "author": "Omega Dias / ΩDIAS",
+    "revision": "original supplied module"
+  },
+  {
+    "file": "gyms/SeafoamIslandsTerrarium.lua",
+    "sha256": "2b3901e030af9f7655edac851433c13f9bca33d75d05d2f4563c2f1a1b1da47c",
+    "author": "Omega Dias / ΩDIAS",
+    "revision": "original supplied module"
+  }
+]

@@ -1,0 +1,92 @@
+--- a/src/import/gba/native_pack.lua
++++ b/src/import/gba/native_pack.lua
+@@ -104,7 +104,7 @@
+   return table.concat(parts)
+ end
+ 
+-function NativePack.decodeIdx(blob)
++function NativePack.decodeIdx(blob, headersOnly)
+   if type(blob) ~= "string" or #blob < 12 or blob:sub(1, 4) ~= NativePack.MAGIC_IDX then
+     return nil, "bad mids.idx magic"
+   end
+@@ -134,10 +134,17 @@
+     midIds[i] = read_u16(blob, off)
+     off = off + 2
+   end
+-  local pixels = {}
+-  local n = midCount * 256
+-  for i = 1, n do
+-    pixels[i] = blob:byte(off + i - 1) or 0
++  -- Atlas cache hits only need dimensions and metatile IDs. Keep all header
++  -- and payload-length validation above, without materialising one Lua number
++  -- per pixel. RGBA cache misses can read the validated packed bytes directly;
++  -- default callers retain the complete decoded pixel table.
++  local pixels
++  if not headersOnly then
++    pixels = {}
++    local n = midCount * 256
++    for i = 1, n do
++      pixels[i] = blob:byte(off + i - 1) or 0
++    end
+   end
+   return {
+     formatVersion = formatVersion,
+@@ -147,6 +154,8 @@
+     atlasRows = atlasRows,
+     midIds = midIds,
+     pixels = pixels,
++    pixelBlob = headersOnly and blob or nil,
++    pixelOffset = headersOnly and off or nil,
+   }
+ end
+ 
+@@ -227,6 +236,7 @@
+   end
+   -- Convert contiguous native tile rows, avoiding per-pixel division/modulo.
+   local pixels = idxTbl.pixels or {}
++  local pixelBlob, pixelOffset = idxTbl.pixelBlob, idxTbl.pixelOffset
+   local rowChunks = {}
+   local empty = string.rep(lut[0],16)
+   for midRow = 0, rows - 1 do
+@@ -236,7 +246,12 @@
+         local slot = midRow * cols + midCol
+         if slot < midCount then
+           local base = slot * 256 + py * 16
++          if pixelBlob then
++            local a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p = pixelBlob:byte(pixelOffset + base, pixelOffset + base + 15)
++            line[midCol + 1] = lut[a] .. lut[b] .. lut[c] .. lut[d] .. lut[e] .. lut[f] .. lut[g] .. lut[h] .. lut[i] .. lut[j] .. lut[k] .. lut[l] .. lut[m] .. lut[n] .. lut[o] .. lut[p]
++          else
+           line[midCol + 1] = (lut[pixels[base + 1] or 0] or lut[0]) .. (lut[pixels[base + 2] or 0] or lut[0]) .. (lut[pixels[base + 3] or 0] or lut[0]) .. (lut[pixels[base + 4] or 0] or lut[0]) .. (lut[pixels[base + 5] or 0] or lut[0]) .. (lut[pixels[base + 6] or 0] or lut[0]) .. (lut[pixels[base + 7] or 0] or lut[0]) .. (lut[pixels[base + 8] or 0] or lut[0]) .. (lut[pixels[base + 9] or 0] or lut[0]) .. (lut[pixels[base + 10] or 0] or lut[0]) .. (lut[pixels[base + 11] or 0] or lut[0]) .. (lut[pixels[base + 12] or 0] or lut[0]) .. (lut[pixels[base + 13] or 0] or lut[0]) .. (lut[pixels[base + 14] or 0] or lut[0]) .. (lut[pixels[base + 15] or 0] or lut[0]) .. (lut[pixels[base + 16] or 0] or lut[0])
++          end
+         else
+           line[midCol + 1] = empty
+         end
+--- a/src/core/game3/tileset_native.lua
++++ b/src/core/game3/tileset_native.lua
+@@ -88,7 +88,7 @@
+   if not idxBlob or not palBlob then
+     return nil, "missing native blobs for " .. tostring(pair)
+   end
+-  local idxTbl, ierr = NativePack.decodeIdx(idxBlob)
++  local idxTbl, ierr = NativePack.decodeIdx(idxBlob, true)
+   if not idxTbl then return nil, ierr end
+   local rgb, bgr = Palette.load(palBlob)
+   if not rgb then return nil, bgr end
+@@ -130,7 +130,7 @@
+ 
+   if layered then
+     local overBlob = cache:read(NATIVE .. "/" .. pair .. "/mids_over.idx")
+-    local overTbl = overBlob and NativePack.decodeIdx(overBlob)
++    local overTbl = overBlob and NativePack.decodeIdx(overBlob, true)
+     if overTbl then
+       local overHash = Palette.hash(bgr, overBlob)
+       local oImg, oData = bake_or_load(cache, pair, overTbl, rgb, overHash, "o", true)
+@@ -142,7 +142,7 @@
+       end
+     end
+     local midBlob = cache:read(NATIVE .. "/" .. pair .. "/mids_mid.idx")
+-    local midTbl = midBlob and NativePack.decodeIdx(midBlob)
++    local midTbl = midBlob and NativePack.decodeIdx(midBlob, true)
+     if midTbl then
+       ts.midImage = bake_or_load(cache, pair, midTbl, rgb, Palette.hash(bgr, midBlob), "m", true)
+     end

@@ -1,0 +1,24 @@
+{
+  "source": "Construction Paper Backgrounds / conppr_grey.jpg",
+  "author": "jbp4444",
+  "source_url": "https://opengameart.org/content/construction-paper-backgrounds",
+  "source_license": "CC0-1.0",
+  "source_archive_sha256": "35fbc28431a4538f0a26518de55a0a95ee03e1f2c034ba84755da34a388f744c",
+  "derivation": "Built-in image_gen edit of actual paper scan into seamless tangent-space normal texture; resized to512 and vectors recentered/renormalized. This is a generated derivative, not measured scan surface normals.",
+  "prompt": "Derive a clean seamless square tileable OpenGL tangent-space RGB normal map from the supplied scanned grey construction paper; very fine irregular fibers, shallow relief, no large wrinkles, albedo, lighting, text or borders. Flat normal128,128,255; X red, Y green, positiveZ blue; preserve scanned fiber character; target512square.",
+  "validation": {
+    "size": [
+      512,
+      512
+    ],
+    "format": "RGB8 linear tangent-space normals",
+    "seam_rms": 13.221310823660145,
+    "interior_adjacent_rms": 12.176396349191254,
+    "mean_before_recentering": [
+      134.0661277770996,
+      136.7926483154297,
+      250.89355087280273
+    ],
+    "sha256": "7c2746727f3f63242c97b6c6e9ef9c2901a10d0caa959bce8629809491497e6c"
+  }
+}

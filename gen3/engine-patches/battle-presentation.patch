@@ -1,0 +1,115 @@
+diff --git a/src/core/game3/battle/ui.lua b/src/core/game3/battle/ui.lua
+--- a/src/core/game3/battle/ui.lua
++++ b/src/core/game3/battle/ui.lua
+@@ -53,6 +53,10 @@
+ Ui._bounce = { hb = {}, mon = {} }
+ Ui._preview = nil
+ Ui._partnerAction = nil
++-- Optional presentation-only adapter. Nil preserves native FRLG rendering.
++-- Rules/state never consume it. The owning mod must bind an exact battle.
++Ui.presentationApiVersion = 2
++Ui.presentation = nil
+ 
+ -- pokefirered/src/battle_script_commands.c:5149
+ local BATTLE_YESNO = { left = 24, top = 9, style = "battle" }
+@@ -116,6 +120,11 @@
+ end
+ 
+ local function battler_sprite_center(side, species, base, form, ghost)
++  local presentation=Ui.presentation
++  if presentation and presentation.center then
++    local x,y=presentation.center(side,species,form,ghost)
++    if x~=nil then return x,y end
++  end
+   if type(side) == "number" then
+     local id = side
+     side = (id % 2 == 0) and "player" or "enemy"
+@@ -1514,6 +1523,7 @@
+ --- Draw mon pic at GetBattlerSpriteFinal_Y center (64×64 → TL = center−32).
+ -- Applies Anim present offsets / alpha / visibility / z (Dig/Fly hide).
+ local function draw_mon_sprite(battler, base, back, id)
++  if Ui.presentation and Ui.presentation.drawBattler and Ui.presentation.drawBattler(back and "player" or "enemy",battler) then return end
+   if not battler then return end
+   local side = back and "player" or "enemy"
+   local key = id or side
+@@ -1557,7 +1567,8 @@
+     entry = Pokemon.ghostPic()
+   end
+   if not entry and back and Pokemon.backPic then
+-    entry = Pokemon.backPic(sp, form)
++    if Ui.presentation and Ui.presentation.frontSprites then entry=Pokemon.frontPic(sp,form)
++    else entry = Pokemon.backPic(sp, form) end
+   end
+   if not entry then
+     entry = Pokemon.frontPic and Pokemon.frontPic(sp, form)
+@@ -1572,9 +1583,15 @@
+       love.graphics.setColor(shade, shade, shade, a)
+     end
+     local hFlip = (pres and pres.hFlip) and true or false
++    if Ui.presentation and Ui.presentation.frontSprites and back and not dollImg then hFlip=not hFlip end
++    if Ui.presentation and Ui.presentation.scale then scale=scale*Ui.presentation.scale(side,sp,form) end
+     local sx = (hFlip and -1 or 1) * scale * ((pres and pres.sx) or 1)
+     local sy = scale * ((pres and pres.sy) or 1)
+     local rot = (pres and pres.rotation) or 0
++    if Ui.presentation and Ui.presentation.poseCenter then
++      local x, y = Ui.presentation.poseCenter(back and "player" or "enemy", entry.image, cx, cy, rot, sx, sy, pres, battler)
++      if x ~= nil then cx, cy = x, y end
++    end
+     local blended
+     if id then
+       blended = BallOpen.setBlendShader(BallOpen.monBlend(id))
+@@ -1710,6 +1727,7 @@
+ 
+ 
+ local function draw_enemy_trainer(stage)
++  if Ui.presentation and Ui.presentation.drawTrainer and Ui.presentation.drawTrainer("enemy",stage)then return end
+   if not stage or not stage.trainer then return end
+   local TrainerPic = require("src.core.game3.trainer_pic")
+   local te = stage.trainer.enemy
+@@ -1726,6 +1744,7 @@
+ end
+ 
+ local function draw_player_trainer(stage)
++  if Ui.presentation and Ui.presentation.drawTrainer and Ui.presentation.drawTrainer("player",stage)then return end
+   if not stage or not stage.trainer then return end
+   local TrainerPic = require("src.core.game3.trainer_pic")
+   local tp = stage.trainer.player
+@@ -1754,6 +1773,11 @@
+   if not ball or not ball.visible then return end
+   local bx = (ball.x or 0) + (ball.ox or 0)
+   local by = (ball.y or 0) + (ball.oy or 0)
++  local ballScale = tonumber(ball.scale) or 1
++  if Ui.presentation and Ui.presentation.ballPosition then
++    local x, y, scale = Ui.presentation.ballPosition(ball)
++    if x ~= nil then bx, by, ballScale = x, y, scale or 1 end
++  end
+   local rot = tonumber(ball.rot) or 0
+   local frame = math.max(0, math.min(2, tonumber(ball.frame) or 0))
+   local darken = tonumber(ball.darken) or 0
+@@ -1796,12 +1820,13 @@
+     end
+     local blend = ball.blend
+     local blended = blend and BallOpen.setBlendShader(blend.coeff, blend.r, blend.g, blend.b)
+-    love.graphics.draw(img, Ui._ballQuads[key], bx, by, rot, 1, 1, 8, 8)
++    love.graphics.draw(img, Ui._ballQuads[key], bx, by, rot, ballScale, ballScale, 8, 8)
+     if blended then love.graphics.setShader() end
+   else
+     -- Procedural 16x16 Poké Ball fallback
+     love.graphics.push()
+     love.graphics.translate(bx, by)
++    love.graphics.scale(ballScale, ballScale)
+     love.graphics.rotate(rot)
+     love.graphics.setColor(0.9, 0.2, 0.2, 1)
+     love.graphics.arc("fill", 0, 0, 7, math.pi, 0)
+@@ -1899,6 +1924,11 @@
+     BattleChrome.drawPartyBar(pos.x, pos.y, player.balls, player.ox, false)
+   end
+ end
++
++-- Presentation adapters may capture the native sprite pass; all native
++-- affine/visibility/palette animation remains inside this function.
++Ui.drawBattler = draw_mon_sprite
++Ui.drawBall = draw_ball_entry
+ 
+ function Ui.draw(w, h)
+   if not (love and love.graphics) then return end
