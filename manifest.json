@@ -1,7 +1,8 @@
 {
   "id": "ORIGAMI_ASCENDANT",
   "name": "Origami Ascendant",
-  "version": "1.0.0",
+  "version": "1.0.1",
+  "github": "Roxas2712/origami-ascendant",
   "api": 2,
   "entry": "gen3/entry.lua",
   "profile": "content",

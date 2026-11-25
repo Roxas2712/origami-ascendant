@@ -6,7 +6,8 @@ local V=...
 local M={MAX_QUADS=12000,CELL=32,RADIUS=5,last={draws=0,count=0}}
 local mesh,shader,cacheKey,failed,placements,instanced
 M.useInstancing=true
-local vertexStorage
+M.packedUploads=true
+local vertexStorage,packedFailed
 local tick,sourceClock=0,nil
 local function hash(x,z,s)
  local n=(x*104729+z*13007+s*7919)%2147483647
@@ -75,9 +76,11 @@ function M.build(map,focus,storm,neighbors,resolve,profile,bounds,cell,cfg,stora
  -- vertices, while growing back reuses the rows instead of triggering GC.
  local verts,n,used=storage and storage.vertices or {},0,0
  local previous=#verts
+ local packed=storage and storage.packed
  local function add(x,y,z,phase,width,length,kind)
   if n>=M.MAX_QUADS then return end
   n=n+1
+  if packed then return end
   if storage and storage.instanced then
    used=used+1;local row=storage.rows[used]or{};storage.rows[used]=row
    row[1],row[2],row[3],row[4],row[5],row[6],row[7]=x,y,z,phase,width,length,kind
@@ -146,6 +149,8 @@ function M.build(map,focus,storm,neighbors,resolve,profile,bounds,cell,cfg,stora
   end
  end
  stats.columnsBuilt,stats.columnsReused,stats.cachedColumns=0,0,0
+ packed=columns and packed
+ local packedCount=0
  local recording
  local function emit(x,y,z,phase,width,length,kind)
   if recording then
@@ -160,7 +165,8 @@ function M.build(map,focus,storm,neighbors,resolve,profile,bounds,cell,cfg,stora
   if columns and not row then row={};columns[iz]=row end
   local saved=row and row[ix]
   if saved then
-   for i=1,#saved,7 do add(saved[i],saved[i+1],saved[i+2],saved[i+3],saved[i+4],saved[i+5],saved[i+6])end
+   if packed then n=n+#saved/7
+   else for i=1,#saved,7 do add(saved[i],saved[i+1],saved[i+2],saved[i+3],saved[i+4],saved[i+5],saved[i+6])end end
    stats.impacts=stats.impacts+saved.impacts;stats.columnsReused=stats.columnsReused+1
   else
   recording=columns and {}or nil
@@ -187,11 +193,23 @@ function M.build(map,focus,storm,neighbors,resolve,profile,bounds,cell,cfg,stora
   if recording then recording.impacts=stats.impacts-previousImpacts;row[ix]=recording end
   stats.columnsBuilt=stats.columnsBuilt+1
   end
-  if columns then stats.cachedColumns=stats.cachedColumns+1 end
+  if columns then
+   if packed then
+    local column=row[ix]
+    if #column>0 then
+     if not column.bytes then
+      column.bytes=love.data.pack('string',('f'):rep(#column),unpack(column))
+     end
+     packedCount=packedCount+1;packed[packedCount]=column.bytes
+    end
+   end
+   stats.cachedColumns=stats.cachedColumns+1
+  end
  end end
  for i=used+1,previous do verts[i]=nil end
  M.buildStats=stats
- return verts,n
+ if packed then for i=packedCount+1,#packed do packed[i]=nil end end
+ return verts,n,packed
 end
 M.GLSL=[[
 varying vec2 dropUV;
@@ -339,6 +357,10 @@ function M.draw(entries,drawList,mode,vp,eye,focus,tint,pixelWidth,amount)
  local columnKey=key;key=table.concat(bounds,':')..':'..key
  if key~=cacheKey then
   vertexStorage=vertexStorage or {vertices={},rows={},instanced=instanced}
+  local upload=instanced and V.require('RainMeshUpload')
+  if M.packedUploads and upload and not packedFailed and love.data and love.data.pack and love.data.newByteData then
+   vertexStorage.packed=vertexStorage.packed or {}
+  else vertexStorage.packed=nil end
   vertexStorage.columnKey=columnKey
   -- Keep identities used in the generation key alive. Otherwise Lua could
   -- recycle an old table address for different geometry before the next draw.
@@ -346,7 +368,7 @@ function M.draw(entries,drawList,mode,vp,eye,focus,tint,pixelWidth,amount)
   for _,w in ipairs(wrappers)do refs[#refs+1]=w.layout end
   for _,cache in ipairs(drawList)do if next(cache.heights)then refs[#refs+1]=cache.heights end end
   vertexStorage.surfaceRefs=refs
-  local vertices,n=M.build(wrappers[1],focus,mode,neighbors,M.surfaceResolver(drawList),profile,bounds,cell,cfg,vertexStorage)
+  local vertices,n,packed=M.build(wrappers[1],focus,mode,neighbors,M.surfaceResolver(drawList),profile,bounds,cell,cfg,vertexStorage)
   if instanced then
    if not mesh then
     local quad={};for i,c in ipairs(corners)do quad[i]={0,0,0,c[1],c[2]}end
@@ -354,7 +376,12 @@ function M.draw(entries,drawList,mode,vp,eye,focus,tint,pixelWidth,amount)
     placements=g.newMesh({{'RainPosition','float',3},{'DropData','float',4}},M.MAX_QUADS,'points','dynamic')
     mesh:attachAttribute('RainPosition',placements,'perinstance');mesh:attachAttribute('DropData',placements,'perinstance')
    end
-   if #vertices>0 then placements:setVertices(vertices,1,#vertices)end
+   if not upload.write(placements,vertices,n,packed) then
+    -- Keep the original table upload on hosts without the Data overload.
+    packedFailed=true;vertexStorage.packed=nil
+    vertices,n=M.build(wrappers[1],focus,mode,neighbors,M.surfaceResolver(drawList),profile,bounds,cell,cfg,vertexStorage)
+    upload.write(placements,vertices,n)
+   end
   else
    if not mesh then mesh=g.newMesh({{'VertexPosition','float',3},{'VertexTexCoord','float',2},{'DropData','float',4}},M.MAX_QUADS*6,'triangles','dynamic')end
    if #vertices>0 then mesh:setVertices(vertices,1,#vertices);mesh:setDrawRange(1,#vertices)end
@@ -379,6 +406,7 @@ function M.invalidate(keepShader)
  -- Scene/config changes invalidate precipitation columns, not shader code.
  -- Full release and an instancing-mode change still drop the program.
  for _,o in ipairs({mesh or false,placements or false})do if o then o:release()end end
+ packedFailed=nil
  if not keepShader then
   if shader then shader:release()end
   shader,instanced=nil,nil
