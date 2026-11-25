@@ -1,5 +1,5 @@
 {
-  "version": "1.0.1",
+  "version": "1.0.0",
   "basis": "Frozen RC133 runtime; public release with proprietary license correction on 2026-10-12",
   "files": {
     ".gitignore": "d87aff1507d136b71d3ca5651b07c5e57083b01fc885ea45045e6500c93d6ea5",
@@ -7,7 +7,7 @@
     "ENGINE-INSTALLATION.txt": "50485fc0e9d28a1c1de5e856244f267d5e6bc52119efda036ff6198359857194",
     "LICENSE": "260f367c2fce29a5ae19e9d456814db55ea3c2fb425e1bf7e9f623562fe68518",
     "LIESMICH.txt": "59adaad0b9629d338953fa6ef2019c373f23f96c9d447d3a66a760394eff903e",
-    "README.md": "8dd83f086430fa44bae85e422b9e8c7abb1115812d2f1029e6444743b212f9c7",
+    "README.md": "5a8ea322da7841daa5d8ee0b88fde251aa3a52cfa983690eced5578a1c8c8c7a",
     "engine-support/ENGINE-LICENSE.MD": "d68d38ba4b07c34122d669f219e5c52db45d46f9825378b19bea3f50b1e4cc19",
     "engine-support/engine-compatibility.json": "0634d22ff7b28772b433c62fd321e2efebaa53352a79c02aba458785dc88c821",
     "engine-support/firered-rc1-engine.patch": "588886d197e71a6b9eca914a0771e67481736b885a0e28b60b4f891e0ff7b085",
@@ -1012,7 +1012,6 @@
     "gen3/lib/Props.lua": "0c8a0405602535b410ea66faf881fcaad233acbe9fe7094bdceb6140218797ee",
     "gen3/lib/Puddles.lua": "7f5ab634491c5dd43949cacddaa3c32cf939ebd5fd852254004e3cc4359f8299",
     "gen3/lib/QuickMenuView.lua": "99bea40ba4a93a2fca057d9a1fe067adec3c04a6ea39870e269f29ffdfce67a6",
-    "gen3/lib/RainMeshUpload.lua": "ae32f770f2e3e8464695718fc096faed10d0b4cc97c027e2235435ff8e837d25",
     "gen3/lib/RainStrength.lua": "1f2145861b6affe2c327e29e17e86f54b6b3cdce7e77beb0c52398fecf368a03",
     "gen3/lib/RenderCacheCodec.lua": "b6bf67f76bdaaa4f1baa8d1dd834a8100667f8c53592bc24df585bc9a9ec02c5",
     "gen3/lib/RenderResolution.lua": "725693d820fb7feaa9e30114232b5a66da79c70d052910527f9ea1ca7c90899f",
@@ -1091,7 +1090,7 @@
     "gen3/lib/WorldBorder.lua": "7a712e1e82b360ed87f05f2c17c3f49e8c5166f5ab195a742fa717565ee2e2ac",
     "gen3/lib/WorldDepthPrepass.lua": "0e420b5538a177fd4cd05d036163eec2be6b53af2242c59e306adfdbe67f08ad",
     "gen3/lib/WorldGeometry.lua": "9d7c297fed8a1ebd78428d5658a986e8b9a6c8164faac0168031523dbbab1db9",
-    "gen3/lib/WorldRain.lua": "2709e0e80223d4bef743b0b72d34c242444eec6995ad416bcfef04040047e9b4",
+    "gen3/lib/WorldRain.lua": "e7f3af9035a75fef07f70e586a01c884842877d7f85fe398302481fd51b8b0b8",
     "gen3/lib/battle/BattleFootprints.lua": "24e4fa3b0c7f8e858cdeda51cee0557111101e0a593f4688d393d0db209663c0",
     "gen3/lib/battle/BattleResolution.lua": "107f0f3e00ac713b0ba183e45ab124323a5946ab9a2be4cd2c81aa23fde3873d",
     "gen3/lib/battle/BattleSlots.lua": "e96c7a2ecce77e321b5c6a84e11b8cab0009b6b3f98f1fd4d3ec478fae3bddf0",
@@ -1868,6 +1867,6 @@
     "gen3/render-cache/ffeb5d2f1bef3961e92cd753bd98690b6018a38033c92ce137df41483edb3e9a.data": "ffeb5d2f1bef3961e92cd753bd98690b6018a38033c92ce137df41483edb3e9a",
     "gen3/render-cache/ffecc846341de161ee40c6aada23905953fc4931bea3263b8faeb7320bed4e91.data": "ffecc846341de161ee40c6aada23905953fc4931bea3263b8faeb7320bed4e91",
     "gen3/render-cache/index.data": "8b46de06bb9645fa776f31643707e009404c4a27d60a246537182e106a0224ad",
-    "manifest.json": "7a223453fc3cdafe6fb4dd285fdbbf952e1e420bd576de65d228c3c898a2bb81"
+    "manifest.json": "f17f4925b9ba1557b4d495f319b5d3e14a3f3735d5033698cde97b8490fbd958"
   }
 }

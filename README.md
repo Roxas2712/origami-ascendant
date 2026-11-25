@@ -1,13 +1,13 @@
 # Origami Ascendant
 
-**Version 1.0.1** — paper diorama worlds for Pokémon **FireRed, LeafGreen and Emerald**, running in gen1recomp.
+**Version 1.0.0** — paper diorama worlds for Pokémon **FireRed, LeafGreen and Emerald**, running in gen1recomp.
 
-[Download the installable ZIP](https://github.com/Roxas2712/origami-ascendant/releases/download/v1.0.1/ORIGAMI_ASCENDANT-1.0.1.zip) · [Release notes](https://github.com/Roxas2712/origami-ascendant/releases/tag/v1.0.1)
+[Download the installable ZIP](https://github.com/Roxas2712/origami-ascendant/releases/download/v1.0.0/Origami-Ascendant-1.0.0.zip) · [Release notes](https://github.com/Roxas2712/origami-ascendant/releases/tag/v1.0.0)
 
 ## Install
 
 1. Install gen1recomp and import your own supported game ROM.
-2. Download **ORIGAMI_ASCENDANT-1.0.1.zip** from Releases. GitHub's automatic “Source code” archives are for developers; use the named mod ZIP for installation.
+2. Download **Origami-Ascendant-1.0.0.zip** from Releases. GitHub's automatic “Source code” archives are for developers; use the named mod ZIP for installation.
 3. Import the ZIP through gen1recomp's mod manager, enable **Origami Ascendant**, and restart the application completely.
 
 No ROMs, saved games or engine binaries are included. Tested with gen1recomp **0.3.75 / LÖVE 12**. Historical engine patches bundled under `engine-support/` and `gen3/engine-patches/` are reference material for their stated versions; do not apply them indiscriminately to current engines.
@@ -36,7 +36,7 @@ No ROMs, saved games or engine binaries are included. Tested with gen1recomp **0
 
 ## Release scope and validation
 
-1.0.1 reduces precipitation mesh upload work. The original 1.0.0 release is based on the **RC133** runtime, with public-release metadata and documentation. It includes the Surf renderer fallback fix, supported Emerald MAP battle detection, matching actor render targets and the Field Zoom Card.
+1.0.0 is the frozen **RC133** runtime, with public-release metadata and documentation. It includes the Surf renderer fallback fix, supported Emerald MAP battle detection, matching actor render targets and the Field Zoom Card.
 
 Native Mac checks cover all three editions, Surf entry/movement, Emerald MAP battles, fourth-move execution, settings during battle, zoom input and persistence. Metal and OpenGL render-target checks were performed. Mobile rendering and touch paths were simulated on Mac; **this exact release has not been verified on a physical iPhone**.
 
